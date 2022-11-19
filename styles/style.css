@@ -1,5 +1,6 @@
 input[type=file] {
     opacity: 0;
+    position: absolute;
 }
 label {
     background-color: skyblue;
