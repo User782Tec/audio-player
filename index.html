@@ -1,0 +1,15 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Web Audio Player</title>
+        <link rel="stylesheet" type="text/css" href="style.css">
+    </head>
+    <body>
+        <label for="files">上传文件</label>
+        <input type="file" onchange="pushAudio()" accept="audio/*" id="files">
+        <script>
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            const audioContext = new AudioContext();
+        </script>
+    </body>
+</html>
