@@ -2,22 +2,15 @@
     <head>
         <meta charset="utf-8">
         <title>Web Audio Player</title>
-        <link rel="stylesheet" type="text/css" href="style.css">
+        <link rel="stylesheet" type="text/css" href="styles/style.css">
     </head>
     <body>
         <div class="container">
             <label for="files">上传文件</label>
-            <input type="file" onchange="pushAudio(this)" accept="audio/*" id="files">
+            <input type="file" onchange="pushAudio(this)" id="files">
             <audio id="audio"></audio>
             <button data-playing="false" onclick="togglePlay()">播放/暂停</button>
         </div>
-        <script>
-            const AudioContext = window.AudioContext || window.webkitAudioContext;
-            const audioContext = new AudioContext();
-            function pushAudio(obj) {
-                document.getElementById("audio").src = obj.files[0];
-                var track = audioContext.createMediaElementSource(document.getElementById("audio"));
-            }
-        </script>
+        <script src="scripts/script.js"></script>
     </body>
 </html>
