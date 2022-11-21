@@ -3,13 +3,22 @@
         <meta charset="utf-8">
         <title>Web Audio Player</title>
         <link rel="stylesheet" type="text/css" href="styles/style.css">
+        <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css"> <!--Font awesome图标库-->
     </head>
     <body>
-        <div class="container">
-            <label for="files">上传文件</label>
-            <input type="file" onchange="pushAudio(this)" id="files">
-            <audio id="audio"></audio>
-            <button data-playing="false" onclick="togglePlay()">播放/暂停</button>
+        <div id="main">
+            <dialog class="container" id="menu" open="open">
+                <label for="files" class="file-btn">上传文件</label>
+                <input type="file" id="files">
+                <audio id="audio"></audio>
+                <label data-playing="false" id="play" class="icon-btn"><i class="fa fa-play" id="play-icon"></i></label>
+                <label id="fullscreen" class="icon-btn"><i class="fa fa-expand" id="fullscreen-icon"></i></label>
+                <label id="again" class="icon-btn"><i class="fa fa-refresh"></i></label>
+                <label id="showmenu" class="icon-btn"><i class="fa fa-close"></i></label>
+            </dialog>
+            <div class="control left-top" id="togglemenu" data-menushow="true"></div>
+            <div class="control right-top" id="togglefullscreen"></div>
+            <div class="control right-bottom" id="togglerepeat"></div>
         </div>
         <script src="scripts/script.js"></script>
     </body>
