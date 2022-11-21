@@ -2,11 +2,12 @@
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 const audioContext = new AudioContext();
 var playButton = document.getElementById("play");
+var togglePlay = document.getElementById("toggleplay");
+var playIcon = document.getElementById("play-icon");
 var fileElement = document.getElementById("files");
 var audioElement = document.getElementById("audio");
 var ctrlMenu = document.getElementById("showmenu");
 var toggleMenu = document.getElementById("togglemenu");
-var playIcon = document.getElementById("play-icon");
 var ctrlFullscreen = document.getElementById("fullscreen");
 var fullscreenIcon = document.getElementById("fullscreen-icon");
 var toggleFullscreen = document.getElementById("togglefullscreen");
@@ -18,27 +19,8 @@ const gain = audioContext.createGain();
 var track = audioContext.createMediaElementSource(audioElement);
 
 //绑定事件监听器
-playButton.addEventListener("click",function(){
-    try {
-        playButton = document.getElementById("play");
-        if (audioContext.state === "suspended") {
-            audioContext.resume();
-        }
-        if (playButton.dataset.playing === "false") {
-            audioElement.play();
-            playButton.dataset.playing = "true";
-            playIcon.className = "fa fa-pause";
-        }
-        else if (playButton.dataset.playing === "true") {
-            audioElement.pause();
-            playButton.dataset.playing = "false";
-            playIcon.className = "fa fa-play";
-        }
-    }
-    catch(err) {
-        console.error("操作执行失败,请重试");
-    }
-});
+playButton.addEventListener("click",play);
+togglePlay.addEventListener("dblclick",play);
 audioElement.addEventListener("ended",function(){
     playButton.dataset.playing = "false";
     playIcon.className = "fa fa-play";
@@ -110,7 +92,27 @@ function fullscreen() {
         }
     }
 }
-
+function play() {
+    try {
+        playButton = document.getElementById("play");
+        if (audioContext.state === "suspended") {
+            audioContext.resume();
+        }
+        if (playButton.dataset.playing === "false") {
+            audioElement.play();
+            playButton.dataset.playing = "true";
+            playIcon.className = "fa fa-pause";
+        }
+        else if (playButton.dataset.playing === "true") {
+            audioElement.pause();
+            playButton.dataset.playing = "false";
+            playIcon.className = "fa fa-play";
+        }
+    }
+    catch(err) {
+        console.error("操作执行失败,请重试");
+    }
+}
 //设置定时循环程序
 window.setInterval(function(){
     if (document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement) {
