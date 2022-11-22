@@ -17,7 +17,6 @@ label.file-btn {
 }
 body {
     margin-top: 10px;
-    touch-action: none;
 }
 .container {
     /*height: 100%;*/
