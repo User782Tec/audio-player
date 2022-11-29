@@ -1,3 +1,5 @@
+'use strict';
+
 //变量声明与定义
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 const audioContext = new AudioContext();
@@ -23,13 +25,19 @@ var toggleFullscreen = document.getElementById("togglefullscreen");
 var repeat = document.getElementById("again");
 var toggleRepeat = document.getElementById("togglerepeat");
 
+//var windows = document.getElementsByClassName("window");
+//var toolbars = document.getElementsByClassName("toolbar");
+//var closeButtons = document.getElementsByClassName("close");
+
 var aboutWindow = document.getElementById("about");
 var showAbout = document.getElementById("showabout");
 var closeAbout = document.getElementById("closeabout");
 var aboutToolbar = document.getElementById("abouttoolbar");
-var windows = document.getElementsByClassName("window");
-var toolbars = document.getElementsByClassName("toolbar");
-var closeButtons = document.getElementsByClassName("close");
+
+var helpWindow = document.getElementById("help");
+var showHelp = document.getElementById("showhelp");
+var closeHelp = document.getElementById("closehelp");
+var helpToolbar = document.getElementById("helptoolbar");
 
 const menu = document.getElementById("menu");
 
@@ -39,8 +47,7 @@ const gain = audioContext.createGain();
 var track = audioContext.createMediaElementSource(audioElement);
 
 var isAboutDragging = false;
-
-var thisWindow;
+var isHelpDragging = false;
 
 //绑定事件监听器
 showAbout.addEventListener("click",function(){
@@ -58,9 +65,6 @@ aboutToolbar.addEventListener("mousemove",(e) => {
         aboutWindow.style.top = e.pageY - 20;
     }
 });
-window.addEventListener("mouseup",function(){
-    isAboutDragging = false;
-});
 aboutToolbar.addEventListener("touchstart",function(){
     isAboutDragging = true;
 });
@@ -70,8 +74,39 @@ aboutToolbar.addEventListener("touchmove",(e) => {
         aboutWindow.style.top = e.touches[0].pageY - 20;
     }
 });
+
+showHelp.addEventListener("click",function(){
+    helpWindow.style.display = "block"
+});
+closeHelp.addEventListener("click",function(){
+    helpWindow.style.display = "none";
+});
+helpToolbar.addEventListener("mousedown",function(){
+    isHelpDragging = true;
+});
+helpToolbar.addEventListener("mousemove",(e) => {
+    if (isHelpDragging) {
+        helpWindow.style.left = e.pageX - 20;
+        helpWindow.style.top = e.pageY - 20;
+    }
+});
+helpToolbar.addEventListener("touchstart",function(){
+    isHelpDragging = true;
+});
+helpToolbar.addEventListener("touchmove",(e) => {
+    if (isHelpDragging) {
+        helpWindow.style.left = e.touches[0].pageX - 20;
+        helpWindow.style.top = e.touches[0].pageY - 20;
+    }
+});
+
+window.addEventListener("mouseup",function(){
+    isAboutDragging = false;
+    isHelpDragging = false;
+});
 window.addEventListener("touchend",function(){
     isAboutDragging = false;
+    isHelpDragging = false;
 });
 
 playButton.addEventListener("click",play);
