@@ -125,6 +125,7 @@ reader.addEventListener("loadend",function(){
     track.connect(gain).connect(audioContext.destination);
 });
 fileElement.addEventListener("change",function(){
+    audioElement.pause();
     playButton.dataset.playing = "false";
     playIcon.className = "fa fa-play"
     fileElement = document.getElementById("files");
