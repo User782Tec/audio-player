@@ -25,10 +25,10 @@ body {
 .container {
     position:absolute;
     bottom: 20px;
-    width:80%;
-    border-width:1px;
-    border-color:skyblue;
-    border-radius:10px;
+    width: 80%;
+    border-width: 1px;
+    border-color: skyblue;
+    border-radius: 10px;
     transition: all 0.5s;
     padding: 10px;
 }
@@ -99,20 +99,22 @@ label.icon-btn {
     padding: 10px;
     display: none;
     box-shadow: 0px 0px 7.5px gray;
+    background-color: #fafafa;
 }
 .toolbar {
     font-size: 1em;
     position: absolute;
-    padding: 5px;
+    padding: 3px 5px 5px 5px;
     left: 0px;
     top: 0px;
-    height: 2em;
-    width: 100%;
+    height: 1em;
+    width: calc(100% - 10px);
+    background-color: white;
 }
 .toolbar-btn {
     font-size: 1em;
     position: absolute;
-    right: 15px;
+    right: 10px;
     height: 1em;
     width: 20px;
     text-align: center;
