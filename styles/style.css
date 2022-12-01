@@ -84,6 +84,10 @@ label.icon-btn {
     width: 395px;
     height: 275px;
 }
+#stylesettings {
+    width: 500px;
+    height: 400px;
+}
 .large {
     font-size: 1.3em;
 }
@@ -144,12 +148,11 @@ label.icon-btn {
         padding: 3px;
     }
     .toolbar {
-        font-size: 0.7em;
+        font-size: 0.8em;
         height: 1.3em;
-        padding: 3px;
     }
     .toolbar-btn {
-        font-size: 0.7em;
+        font-size: 0.9em;
         height: 1em;
         right: 7px;
     }
@@ -168,5 +171,11 @@ label.icon-btn {
     #help iframe {
         width: 295px;
         height: 175px;
+    }
+    .regular {
+        font-size: 0.6em;
+    }
+    .large {
+        font-size: 1em;
     }
 }
