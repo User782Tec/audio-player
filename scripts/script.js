@@ -25,10 +25,6 @@ var toggleFullscreen = document.getElementById("togglefullscreen");
 var repeat = document.getElementById("again");
 var toggleRepeat = document.getElementById("togglerepeat");
 
-//var windows = document.getElementsByClassName("window");
-//var toolbars = document.getElementsByClassName("toolbar");
-//var closeButtons = document.getElementsByClassName("close");
-
 var aboutWindow = document.getElementById("about");
 var showAbout = document.getElementById("showabout");
 var closeAbout = document.getElementById("closeabout");
@@ -60,7 +56,7 @@ var helpTop;
 
 //绑定事件监听器
 showAbout.addEventListener("click",() => {
-    aboutWindow.style.display = "block"
+    aboutWindow.style.display = "block";
 });
 closeAbout.addEventListener("click",() => {
     aboutWindow.style.display = "none";
@@ -264,3 +260,8 @@ window.setInterval(() => {
         fullscreenIcon.className = "fa fa-expand";
     }
 },20); //实时更新全屏图标
+
+//初始化的程序
+if (window.innerWidth < 600) {
+    alert("当前浏览器窗口过小,可能会导致一些问题,请放大窗口或更换大屏设备。");
+}
