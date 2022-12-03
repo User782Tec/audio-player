@@ -7,7 +7,7 @@
         <link rel="stylesheet" type="text/css" href="styles/style.css">
         <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css"> <!--Font awesome图标库-->
     </head>
-    <body>
+    <body id="body">
         <div id="main">
             <dialog class="container" id="menu" open="open">
                 <label for="files" class="file-btn">上传文件</label>
@@ -18,7 +18,8 @@
                 <label id="fullscreen" class="icon-btn"><i class="fa fa-expand" id="fullscreen-icon"></i></label>
                 <label id="again" class="icon-btn"><i class="fa fa-refresh"></i></label>
                 <label id="showabout" class="icon-btn"><i class="fa fa-info"></i></label>
-                <label id="showhelp" class="icon-btn"><i class="fa fa-question"></i></label>
+                <label id="showhelp" class="icon-btn"><i class="fa fa-question"></i></label><br /><br />
+                <label id="showstylesettings">样式设置</label>
             </dialog>
             <div class="control left-top" id="togglemenu" data-menushow="true"></div>
             <div class="control right-top" id="togglefullscreen"></div>
@@ -30,10 +31,24 @@
             </div>
             <div class="window" id="about" style="top:5px;left:5px;">
                 <div class="toolbar" id="abouttoolbar">关于 <label class="toolbar-btn close" id="closeabout"><i class="fa fa-close"></i></label></div><br />
-                <iframe src="docs/about.html"></iframe>               
+                <iframe src="docs/about.html"></iframe>
             </div>
             <div class="window" id="stylesettings" style="top:5px;left:5px;">
                 <div class="toolbar" id="stylesettingstoolbar">样式设置 <label class="toolbar-btn close" id="closestylesettings"><i class="fa fa-close"></i></label></div><br />
+                <div id="bgcolor">
+                    <table class="window-title"><tbody><tr><td>背景颜色</td><td><hr></td></tr></tbody></table>
+                    <div class="selector">
+                        <div class="bgcolorpicker" id="bgcolorpicker1" for="range1" data-selected='false' data-color="red"></div>
+                        <div class="bgcolorpicker" id="bgcolorpicker2" for="range2" data-selected='false' data-color="orange"></div>
+                        <div class="bgcolorpicker" id="bgcolorpicker3" for="range3" data-selected='false' data-color="yellow"></div>
+                        <div class="bgcolorpicker" id="bgcolorpicker4" for="range4" data-selected='false' data-color="green"></div>
+                        <div class="bgcolorpicker" id="bgcolorpicker5" for="range5" data-selected='false' data-color="cyan"></div>
+                        <div class="bgcolorpicker" id="bgcolorpicker6" for="range6" data-selected='false' data-color="blue"></div>
+                        <div class="bgcolorpicker" id="bgcolorpicker7" for="range7" data-selected='false' data-color="purple"></div>
+                        <div class="bgcolorpicker" id="bgcolorpicker8" for="range8" data-selected='false' data-color="black"></div>
+                        <div class="bgcolorpicker" id="bgcolorpicker9" for="range9" data-selected='false' data-color="white"></div>
+                    </div>
+                </div>
             </div>
         </div>
         <script src="scripts/script.js"></script>
