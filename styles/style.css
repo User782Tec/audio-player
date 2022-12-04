@@ -2,17 +2,27 @@
     --main-bgcolor: white;
     overflow: hidden;
 }
+
+* {
+    touch-action: none;
+}
+
 input[type=file] {
     display: none;
     /*opacity: 0;*/
     position: absolute;
 }
+
 iframe {
     border: none;
+    width: calc(100% - 5px);
+    height: calc(100% - 15px);
 }
+
 label {
     display: inline-block;
 }
+
 label.file-btn {
     position: absolute;
     background-color: skyblue;
@@ -22,11 +32,13 @@ label.file-btn {
     top: 7px;
     left: calc(50% - 78.5px);
 }
+
 body {
     margin: 0px;
 }
+
 .container {
-    position:absolute;
+    position: absolute;
     bottom: 20px;
     width: 80%;
     border-width: 1px;
@@ -35,6 +47,7 @@ body {
     /*transition: all 0.5s;*/
     padding: 10px;
 }
+
 /*.container:hover {
     box-shadow: 0px 7px 3.5px gray;
 }*/
@@ -44,62 +57,62 @@ body {
     height: 55px;
     display: inline-block;
 }
+
 .left-top {
     left: 0px;
     top: 0px;
 }
+
 .right-top {
     right: 0px;
     top: 0px;
 }
+
 .left-bottom {
     left: 0px;
     bottom: 0px;
 }
+
 .right-bottom {
     right: 0px;
     bottom: 0px;
 }
+
 label.icon-btn {
     font-size: 1.3em;
     width: 1.3em;
     margin-right: 5px;
 }
+
 #main {
     background-color: var(--main-bgcolor);
     width: 100%;
     height: 100%;
-    touch-action: none;
 }
+
 #about {
     width: 200px;
     height: 150px;
 }
-#about iframe {
+
+/*#about iframe {
     width: 195px;
     height: 125px;
-}
+}*/
 #help {
     width: 400px;
     height: 300px;
 }
-#help iframe {
+
+/*#help iframe {
     width: 395px;
     height: 275px;
-}
+}*/
 #stylesettings {
     width: 500px;
     height: 400px;
 }
-.large {
-    font-size: 1.3em;
-}
-.regular {
-    font-size: 1em;
-}
-.small {
-    font-size: 0.8em;
-}
+
 .window {
     position: absolute;
     background-color: white;
@@ -108,49 +121,69 @@ label.icon-btn {
     box-shadow: 0px 0px 7.5px gray;
     background-color: #fafafa;
 }
+
 .bgcolorpicker {
     display: inline-block;
     width: 1em;
     height: 1em;
     border-radius: 5px;
     margin-right: 3px;
-    transition: box-shadow 0.6s;
+    /*transition: box-shadow 0.6s;*/
 }
+
 .selected {
-    outline-style: solid;
+    box-shadow: 0 0 0 2px orange;
+    /*outline-style: solid;
     outline-width: 2px;
-    outline-color: orange;
+    outline-color: orange;*/
 }
-.bgcolorpicker:hover {
+
+/*.bgcolorpicker:hover {
     box-shadow: 0px 2px 1px lightgray;
+}*/
+.fullscreen {
+    width: 100% !important;
+    height: 100% !important;
+    top: 0px !important;
+    left: 0px !important;
 }
+
 #bgcolorpicker1 {
     background-color: red;
 }
+
 #bgcolorpicker2 {
     background-color: orange;
 }
+
 #bgcolorpicker3 {
     background-color: yellow;
 }
+
 #bgcolorpicker4 {
     background-color: green;
 }
+
 #bgcolorpicker5 {
     background-color: cyan;
 }
+
 #bgcolorpicker6 {
     background-color: blue;
 }
+
 #bgcolorpicker7 {
     background-color: purple;
 }
+
 #bgcolorpicker8 {
     background-color: black;
 }
+
 #bgcolorpicker9 {
     background-color: white;
 }
+
 .toolbar {
     font-size: 1em;
     position: absolute;
@@ -161,6 +194,7 @@ label.icon-btn {
     width: calc(100% - 10px);
     background-color: white;
 }
+
 .toolbar-btn {
     font-size: 1em;
     position: absolute;
@@ -170,67 +204,92 @@ label.icon-btn {
     text-align: center;
     margin-top: 1px;
 }
+
 .close {
     transition: all 0.3s;
 }
+
 .close:hover {
     background-color: red;
     color: white;
 }
+
 .window-title {
     width: 100%;
 }
-hr {
-    width: 400px;
-}
+
 .selector {
     padding-left: 5px;
 }
-@media only screen and (max-width: 600px) {
+
+@media only screen and (max-width: 400px) {
     .container {
         width: 90%;
         font-size: 0.8em;
     }
+
     .container.icon-btn {
         width: 1em;
         padding: 0px;
     }
+
     label.file-btn {
         width: 100px;
         left: calc(75% - 50px);
     }
+
     .window {
         padding: 3px;
     }
+
     .toolbar {
         font-size: 0.8em;
         height: 1.3em;
     }
+
     .toolbar-btn {
         font-size: 0.9em;
         height: 1em;
         right: 7px;
     }
+
     #about {
         width: 150px;
         height: 100px;
     }
-    #about iframe {
+
+    /*#about iframe {
         width: 145px;
         height: 75px;
-    }
+    }*/
     #help {
         width: 300px;
         height: 200px;
     }
-    #help iframe {
+
+    /*#help iframe {
         width: 295px;
         height: 175px;
+    }*/
+    #stylesettings {
+        width: 300px;
+        height: 200px;
     }
-    .regular {
-        font-size: 0.6em;
+}
+
+@media only screen and (min-width: 400px) and (max-width: 600px) {
+    .container {
+        width: 85%;
     }
-    .large {
+
+    label.file-btn {
+        width: 120px;
+        left: calc(70% - 60px);
+    }
+
+    .container.icon-btn {
         font-size: 1em;
+        width: 1em;
+        margin-right: 4px;
     }
 }

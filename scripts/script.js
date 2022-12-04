@@ -55,7 +55,7 @@ var isAboutDragging = false;
 var isHelpDragging = false;
 var isStyleSettingsDragging = false;
 
-var prevClick = {play: 0, fullscreen: 0, menu: 0, repeat: 0};
+var prevClick = { play: 0, fullscreen: 0, menu: 0, repeat: 0 };
 
 var aboutLeft;
 var aboutTop;
@@ -68,144 +68,146 @@ var root = document.querySelector(":root");
 
 var backgroundColorPickers = document.getElementsByClassName("bgcolorpicker")
 
+var useDragging = true;
+
 //绑定事件监听器
-for (var i = 0;i < backgroundColorPickers.length;i++) {
-    backgroundColorPickers[i].addEventListener("click",function(){
-        for (var i = 0;i < backgroundColorPickers.length;i++) {
+for (var i = 0; i < backgroundColorPickers.length; i++) {
+    backgroundColorPickers[i].addEventListener("click", function () {
+        for (var i = 0; i < backgroundColorPickers.length; i++) {
             backgroundColorPickers[i].dataset.selected = 'false';
             backgroundColorPickers[i].className = "bgcolorpicker";
         }
         this.dataset.selected = 'true';
         this.className = "bgcolorpicker selected";
-        root.style.setProperty("--main-bgcolor",this.dataset.color)
+        root.style.setProperty("--main-bgcolor", this.dataset.color)
         //main.style.backgroundColor = this.dataset.color;
     });
 }
 
-showAbout.addEventListener("click",() => {
+showAbout.addEventListener("click", () => {
     aboutWindow.style.display = "block";
 });
-closeAbout.addEventListener("click",() => {
+closeAbout.addEventListener("click", () => {
     aboutWindow.style.display = "none";
 });
-aboutToolbar.addEventListener("mousedown",(e) => {
+aboutToolbar.addEventListener("mousedown", (e) => {
     isAboutDragging = true;
     aboutLeft = e.pageX - Number(aboutWindow.style.left.split("px")[0]);
     aboutTop = e.pageY - Number(aboutWindow.style.top.split("px")[0]);
 });
-aboutToolbar.addEventListener("mousemove",(e) => {
-    if (isAboutDragging) {
+aboutToolbar.addEventListener("mousemove", (e) => {
+    if (isAboutDragging && useDragging) {
         aboutWindow.style.left = e.pageX - aboutLeft;
         aboutWindow.style.top = e.pageY - aboutTop;
     }
 });
-aboutToolbar.addEventListener("touchstart",(e) => {
+aboutToolbar.addEventListener("touchstart", (e) => {
     isAboutDragging = true;
     aboutLeft = e.touches[0].pageX - Number(aboutWindow.style.left.split("px")[0]);
     aboutTop = e.touches[0].pageY - Number(aboutWindow.style.top.split("px")[0]);
 });
-aboutToolbar.addEventListener("touchmove",(e) => {
-    if (isAboutDragging) {
+aboutToolbar.addEventListener("touchmove", (e) => {
+    if (isAboutDragging && useDragging) {
         aboutWindow.style.left = e.touches[0].pageX - aboutLeft;
         aboutWindow.style.top = e.touches[0].pageY - aboutTop;
     }
 });
 
-showHelp.addEventListener("click",() => {
+showHelp.addEventListener("click", () => {
     helpWindow.style.display = "block"
 });
-closeHelp.addEventListener("click",() => {
+closeHelp.addEventListener("click", () => {
     helpWindow.style.display = "none";
 });
-helpToolbar.addEventListener("mousedown",(e) => {
+helpToolbar.addEventListener("mousedown", (e) => {
     isHelpDragging = true;
     helpLeft = e.pageX - Number(helpWindow.style.left.split("px")[0]);
     helpTop = e.pageY - Number(helpWindow.style.top.split("px")[0]);
 });
-helpToolbar.addEventListener("mousemove",(e) => {
-    if (isHelpDragging) {
+helpToolbar.addEventListener("mousemove", (e) => {
+    if (isHelpDragging && useDragging) {
         helpWindow.style.left = e.pageX - helpLeft;
         helpWindow.style.top = e.pageY - helpTop;
     }
 });
-helpToolbar.addEventListener("touchstart",(e) => {
+helpToolbar.addEventListener("touchstart", (e) => {
     isHelpDragging = true;
     helpLeft = e.touches[0].pageX - Number(helpWindow.style.left.split("px")[0]);
     helpTop = e.touches[0].pageY - Number(helpWindow.style.top.split("px")[0]);
 });
-helpToolbar.addEventListener("touchmove",(e) => {
-    if (isHelpDragging) {
+helpToolbar.addEventListener("touchmove", (e) => {
+    if (isHelpDragging && useDragging) {
         helpWindow.style.left = e.touches[0].pageX - helpLeft;
         helpWindow.style.top = e.touches[0].pageY - helpTop;
     }
 });
 
-showStyleSetting.addEventListener("click",() => {
+showStyleSetting.addEventListener("click", () => {
     styleSettingsWindow.style.display = "block"
 });
-closeStyleSettings.addEventListener("click",() => {
+closeStyleSettings.addEventListener("click", () => {
     styleSettingsWindow.style.display = "none";
 });
-styleSettingsToolbar.addEventListener("mousedown",(e) => {
+styleSettingsToolbar.addEventListener("mousedown", (e) => {
     isStyleSettingsDragging = true;
     styleSettingsLeft = e.pageX - Number(styleSettingsWindow.style.left.split("px")[0]);
     styleSettingsTop = e.pageY - Number(styleSettingsWindow.style.top.split("px")[0]);
 });
-styleSettingsToolbar.addEventListener("mousemove",(e) => {
-    if (isStyleSettingsDragging) {
+styleSettingsToolbar.addEventListener("mousemove", (e) => {
+    if (isStyleSettingsDragging && useDragging) {
         styleSettingsWindow.style.left = e.pageX - styleSettingsLeft;
         styleSettingsWindow.style.top = e.pageY - styleSettingsTop;
     }
 });
-styleSettingsToolbar.addEventListener("touchstart",(e) => {
+styleSettingsToolbar.addEventListener("touchstart", (e) => {
     isStyleSettingsDragging = true;
     styleSettingsLeft = e.touches[0].pageX - Number(styleSettingsWindow.style.left.split("px")[0]);
     styleSettingsTop = e.touches[0].pageY - Number(styleSettingsWindow.style.top.split("px")[0]);
 });
-styleSettingsToolbar.addEventListener("touchmove",(e) => {
-    if (isStyleSettingsDragging) {
+styleSettingsToolbar.addEventListener("touchmove", (e) => {
+    if (isStyleSettingsDragging && useDragging) {
         styleSettingsWindow.style.left = e.touches[0].pageX - styleSettingsLeft;
         styleSettingsWindow.style.top = e.touches[0].pageY - styleSettingsTop;
     }
 });
 
-window.addEventListener("mouseup",() => {
+window.addEventListener("mouseup", () => {
     isAboutDragging = false;
     isHelpDragging = false;
     isStyleSettingsDragging = false;
 });
-window.addEventListener("touchend",() => {
+window.addEventListener("touchend", () => {
     isAboutDragging = false;
     isHelpDragging = false;
     isStyleSettingsDragging = false;
 });
 
-playButton.addEventListener("click",play);
-togglePlay.addEventListener("mousedown",() => {
+playButton.addEventListener("click", play);
+togglePlay.addEventListener("mousedown", () => {
     if (prevClick.play == 0) {
         prevClick.play = 1;
         window.setTimeout(() => {
             prevClick.play = 0;
-        },300);
+        }, 300);
     }
     else {
         play();
     }
 });
 
-audioElement.addEventListener("ended",() => {
+audioElement.addEventListener("ended", () => {
     playButton.dataset.playing = "false";
     playIcon.className = "fa fa-play";
 });
 
-reader.addEventListener("loadend",() => {
+reader.addEventListener("loadend", () => {
     console.log("解析完毕");
     audioElement.src = reader.result;
     //track = audioContext.createMediaElementSource(audioElement);
     track.connect(audioContext.destination);
     track.connect(gain).connect(audioContext.destination);
 });
-fileElement.addEventListener("change",() => {
+fileElement.addEventListener("change", () => {
     audioElement.pause();
     playButton.dataset.playing = "false";
     playIcon.className = "fa fa-play"
@@ -215,41 +217,41 @@ fileElement.addEventListener("change",() => {
     console.log("开始解析");
 });
 
-toggleMenu.addEventListener("mousedown",() => {
+toggleMenu.addEventListener("mousedown", () => {
     if (prevClick.menu == 0) {
         prevClick.menu = 1;
         window.setTimeout(() => {
             prevClick.menu = 0;
-        },300);
+        }, 300);
     }
     else {
         showmenu();
     }
 });
-ctrlMenu.addEventListener("click",showmenu);
+ctrlMenu.addEventListener("click", showmenu);
 
-ctrlFullscreen.addEventListener("click",fullscreen);
-toggleFullscreen.addEventListener("mousedown",() => {
+ctrlFullscreen.addEventListener("click", fullscreen);
+toggleFullscreen.addEventListener("mousedown", () => {
     if (prevClick.fullscreen == 0) {
         prevClick.fullscreen = 1;
         window.setTimeout(() => {
             prevClick.fullscreen = 0;
-        },300);
+        }, 300);
     }
     else {
         fullscreen();
     }
 });
 
-repeat.addEventListener("click",() => {
+repeat.addEventListener("click", () => {
     audioElement.currentTime = 0;
 });
-toggleRepeat.addEventListener("mousedown",() => {
+toggleRepeat.addEventListener("mousedown", () => {
     if (prevClick.repeat == 0) {
         prevClick.repeat = 1;
         window.setTimeout(() => {
             prevClick.repeat = 0;
-        },300);
+        }, 300);
     }
     else {
         audioElement.currentTime = 0;
@@ -304,7 +306,7 @@ function play() {
             playIcon.className = "fa fa-play";
         }
     }
-    catch(err) {
+    catch (err) {
         console.error("操作执行失败,请重试");
     }
 }
@@ -317,9 +319,24 @@ window.setInterval(() => {
     else {
         fullscreenIcon.className = "fa fa-expand";
     }
-},20); //实时更新全屏图标
+}, 20);
 
 //初始化的程序
-if (window.innerWidth < 600) {
+if (window.innerWidth < 400) {
     alert("当前浏览器窗口过小,可能会导致一些问题,请放大窗口或更换大屏设备。");
 }
+window.setInterval(() => {
+    if (window.innerWidth < 400) {
+        useDragging = false;
+        helpWindow.className = "window fullscreen";
+        aboutWindow.className = "window fullscreen";
+        styleSettingsWindow.className = "window fullscreen";
+        console.log(helpWindow.className);
+    }
+    else {
+        useDragging = true;
+        helpWindow.className = "window";
+        aboutWindow.className = "window";
+        styleSettingsWindow.className = "window";
+    }
+},10);
