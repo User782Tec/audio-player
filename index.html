@@ -1,7 +1,7 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, maximum-scale=1.0, user-scalable=no">
+        <meta name="viewport" content="maximum-scale=1.0, user-scalable=no">
         <meta name="format-detection" content="telephone=no,email=no"/>
         <title>Web Audio Player</title>
         <link rel="stylesheet" type="text/css" href="styles/style.css">
@@ -36,17 +36,18 @@
             <div class="window" id="stylesettings" style="top:5px;left:5px;">
                 <div class="toolbar" id="stylesettingstoolbar">样式设置 <label class="toolbar-btn close" id="closestylesettings"><i class="fa fa-close"></i></label></div><br />
                 <div id="bgcolor">
-                    <table class="window-title"><tbody><tr><td>背景颜色</td><td><hr></td></tr></tbody></table>
+                    <div class="window-title">背景</div>
                     <div class="selector">
-                        <div class="bgcolorpicker" id="bgcolorpicker1" for="range1" data-selected='false' data-color="red"></div>
-                        <div class="bgcolorpicker" id="bgcolorpicker2" for="range2" data-selected='false' data-color="orange"></div>
-                        <div class="bgcolorpicker" id="bgcolorpicker3" for="range3" data-selected='false' data-color="yellow"></div>
-                        <div class="bgcolorpicker" id="bgcolorpicker4" for="range4" data-selected='false' data-color="green"></div>
-                        <div class="bgcolorpicker" id="bgcolorpicker5" for="range5" data-selected='false' data-color="cyan"></div>
-                        <div class="bgcolorpicker" id="bgcolorpicker6" for="range6" data-selected='false' data-color="blue"></div>
-                        <div class="bgcolorpicker" id="bgcolorpicker7" for="range7" data-selected='false' data-color="purple"></div>
-                        <div class="bgcolorpicker" id="bgcolorpicker8" for="range8" data-selected='false' data-color="black"></div>
-                        <div class="bgcolorpicker" id="bgcolorpicker9" for="range9" data-selected='false' data-color="white"></div>
+                        <div class="bgcolorpicker" id="bgcolorpicker1" data-color="red"></div>
+                        <div class="bgcolorpicker" id="bgcolorpicker2" data-color="orange"></div>
+                        <div class="bgcolorpicker" id="bgcolorpicker3" data-color="yellow"></div>
+                        <div class="bgcolorpicker" id="bgcolorpicker4" data-color="green"></div>
+                        <div class="bgcolorpicker" id="bgcolorpicker5" data-color="cyan"></div>
+                        <div class="bgcolorpicker" id="bgcolorpicker6" data-color="blue"></div>
+                        <div class="bgcolorpicker" id="bgcolorpicker7" data-color="purple"></div>
+                        <div class="bgcolorpicker" id="bgcolorpicker8" data-color="black"></div>
+                        <div class="bgcolorpicker selected" id="bgcolorpicker9" data-color="white"></div>
+                        <div>自定义：<input type="color" id="bgcolorpicker"></div>
                     </div>
                 </div>
             </div>
