@@ -6,7 +6,7 @@
 
 将文件上传至网页后，用户可以控制相关的配置，并播放音频。
 
-此项目在sourceforge上有备份：https://user782tec-audio-player.sourceforge.io
+此项目在Azure DevOps Repos有备份：https://dev.azure.com/User782/_git/audio-player
 
 ## 更新日志
 
