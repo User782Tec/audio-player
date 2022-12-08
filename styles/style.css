@@ -13,6 +13,10 @@ input[type=file] {
     position: absolute;
 }
 
+input[type=color] {
+    display: none;
+}
+
 iframe {
     border: none;
     width: calc(100% - 5px);

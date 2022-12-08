@@ -74,15 +74,16 @@ var useDragging = true;
 for (var i = 0; i < backgroundColorPickers.length; i++) {
     backgroundColorPickers[i].addEventListener("click", function () {
         for (var i = 0; i < backgroundColorPickers.length; i++) {
-            backgroundColorPickers[i].dataset.selected = 'false';
             backgroundColorPickers[i].className = "bgcolorpicker";
         }
         this.dataset.selected = 'true';
         this.className = "bgcolorpicker selected";
-        root.style.setProperty("--main-bgcolor", this.dataset.color)
+        root.style.setProperty("--main-bgcolor", this.dataset.color);
         //main.style.backgroundColor = this.dataset.color;
     });
 }
+
+
 
 showAbout.addEventListener("click", () => {
     aboutWindow.style.display = "block";
