@@ -5,10 +5,15 @@
         <meta name="format-detection" content="telephone=no,email=no"/>
         <title>Web Audio Player</title>
         <link rel="stylesheet" type="text/css" href="styles/style.css">
+        <link rel="stylesheet" type="text/css" href="docs/css/style.css">
         <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css"> <!--Font awesome图标库-->
     </head>
     <body id="body">
         <div id="main">
+            <div class="control left-top" id="togglemenu" data-menushow="true"></div>
+            <div class="control right-top" id="togglefullscreen"></div>
+            <div class="control left-bottom" id="toggleplay"></div>
+            <div class="control right-bottom" id="togglerepeat"></div>
             <dialog class="container" id="menu" open="open">
                 <label for="files" class="file-btn">上传文件</label>
                 <input type="file" id="files">
@@ -17,38 +22,62 @@
                 <label data-playing="false" id="play" class="icon-btn"><i class="fa fa-play" id="play-icon"></i></label>
                 <label id="fullscreen" class="icon-btn"><i class="fa fa-expand" id="fullscreen-icon"></i></label>
                 <label id="again" class="icon-btn"><i class="fa fa-refresh"></i></label>
-                <label id="showabout" class="icon-btn"><i class="fa fa-info"></i></label>
-                <label id="showhelp" class="icon-btn"><i class="fa fa-question"></i></label><br /><br />
-                <label id="showstylesettings">样式设置</label>
+                <label id="showabout" class="showwindow icon-btn" data-window="about"><i class="fa fa-info"></i></label>
+                <label id="showhelp" class="showwindow icon-btn" data-window="help"><i class="fa fa-question"></i></label><br /><br />
+                <label id="showstylesettings" class="showwindow" data-window="stylesettings">外观</label>
             </dialog>
-            <div class="control left-top" id="togglemenu" data-menushow="true"></div>
+            <!--<div class="control left-top" id="togglemenu" data-menushow="true"></div>
             <div class="control right-top" id="togglefullscreen"></div>
             <div class="control left-bottom" id="toggleplay"></div>
-            <div class="control right-bottom" id="togglerepeat"></div>
-            <div class="window" id="help" style="top:5px;left:5px;">
-                <div class="toolbar" id="helptoolbar">帮助 <label class="toolbar-btn close" id="closehelp"><i class="fa fa-close"></i></label></div><br />
-                <iframe src="docs/help.html"></iframe>
-            </div>
-            <div class="window" id="about" style="top:5px;left:5px;">
-                <div class="toolbar" id="abouttoolbar">关于 <label class="toolbar-btn close" id="closeabout"><i class="fa fa-close"></i></label></div><br />
-                <iframe src="docs/about.html"></iframe>
-            </div>
-            <div class="window" id="stylesettings" style="top:5px;left:5px;">
-                <div class="toolbar" id="stylesettingstoolbar">样式设置 <label class="toolbar-btn close" id="closestylesettings"><i class="fa fa-close"></i></label></div><br />
-                <div id="bgcolor">
-                    <div class="window-title">背景</div>
-                    <div class="selector">
-                        <div class="bgcolorpicker" id="bgcolorpicker1" data-color="red"></div>
-                        <div class="bgcolorpicker" id="bgcolorpicker2" data-color="orange"></div>
-                        <div class="bgcolorpicker" id="bgcolorpicker3" data-color="yellow"></div>
-                        <div class="bgcolorpicker" id="bgcolorpicker4" data-color="green"></div>
-                        <div class="bgcolorpicker" id="bgcolorpicker5" data-color="cyan"></div>
-                        <div class="bgcolorpicker" id="bgcolorpicker6" data-color="blue"></div>
-                        <div class="bgcolorpicker" id="bgcolorpicker7" data-color="purple"></div>
-                        <div class="bgcolorpicker" id="bgcolorpicker8" data-color="black"></div>
-                        <div class="bgcolorpicker selected" id="bgcolorpicker9" data-color="white"></div>
-                        <label for="bgcolorselect" class="bgcolorpicker" id="bgcolorpicker10"></label>
-                        <input type="color" id="bgcolorselect">
+            <div class="control right-bottom" id="togglerepeat"></div>-->
+            <div id="windows">
+                <div class="window" id="help" style="top:5px;left:5px;">
+                    <div class="toolbar" id="helptoolbar" data-window="help">帮助
+                        <div class="toolbarbuttons">
+                            <div class="toolbar-btn close" id="closehelp" data-window="help"><i class="fa fa-close"></i></div>
+                        </div>
+                    </div><br />
+                    <iframe src="docs/help.html"></iframe>
+                </div>
+                <div class="window" id="about" style="top:5px;left:5px;">
+                    <div class="toolbar" id="abouttoolbar" data-window="about">关于
+                        <div class="toolbarbuttons">
+                            <div class="toolbar-btn maximum" id="maximizeabout" data-window="about"><i class="fa fa-window-maximize"></i></div>
+                            <div class="toolbar-btn close" id="closeabout" data-window="about"><i class="fa fa-close"></i></div>
+                        </div>
+                    </div><br />
+                    <iframe src="docs/about.html"></iframe>
+                </div>
+                <div class="window" id="stylesettings" style="top:5px;left:5px;">
+                    <div class="toolbar" id="stylesettingstoolbar" data-window="stylesettings">外观
+                        <div class="toolbarbuttons">
+                            <div class="toolbar-btn close" id="closestylesettings" data-window="stylesettings"><i class="fa fa-close"></i></div>
+                        </div>
+                    </div><br />
+                    <div id="bgcolor" class="regular">
+                        <div class="window-title">背景</div>
+                        <div class="selector">
+                            <div class="bgcolorpicker" data-color="red"></div>
+                            <div class="bgcolorpicker" data-color="orange"></div>
+                            <div class="bgcolorpicker" data-color="yellow"></div>
+                            <div class="bgcolorpicker" data-color="green"></div>
+                            <div class="bgcolorpicker" data-color="cyan"></div>
+                            <div class="bgcolorpicker" data-color="blue"></div>
+                            <div class="bgcolorpicker" data-color="purple"></div>
+                            <div class="bgcolorpicker" data-color="black"></div>
+                            <div class="bgcolorpicker selected" data-color="white"></div>
+                            <label for="bgcolorselect" class="bgcolorpicker" id="bgcolorselectlabel" data-color="black"><input type="color" id="bgcolorselect"></label>
+                        </div>
+                        <div class="window-title">高级</div>
+                        <div class="selector">
+                            <div>修改样式(开发者)<div class="right button" id="getstyles">生成当前样式配置</div></div>
+                            <div>
+                                <textarea id="style-editor"></textarea>
+                            </div>
+                            <div>
+                                <div id="commit">保存更改</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
