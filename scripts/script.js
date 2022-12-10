@@ -30,12 +30,17 @@ var toggleRepeat = document.getElementById("togglerepeat");
 var aboutWindow = document.getElementById("about");
 var showAbout = document.getElementById("showabout");
 var closeAbout = document.getElementById("closeabout");
+var maximizeAbout = document.getElementById("maximizeabout");
 var aboutToolbar = document.getElementById("abouttoolbar");
 
 var helpWindow = document.getElementById("help");
 var showHelp = document.getElementById("showhelp");
 var closeHelp = document.getElementById("closehelp");
 var helpToolbar = document.getElementById("helptoolbar");
+
+var showWindows = document.getElementsByClassName("showwindow");
+var closeWindows = document.getElementsByClassName("close");
+var toolbars = document.getElementsByClassName("toolbar");
 
 var styleSettingsWindow = document.getElementById("stylesettings");
 var showStyleSetting = document.getElementById("showstylesettings");
@@ -66,29 +71,70 @@ var styleSettingsTop;
 
 var root = document.querySelector(":root");
 
-var backgroundColorPickers = document.getElementsByClassName("bgcolorpicker")
+var backgroundColorPickers = document.getElementsByClassName("bgcolorpicker");
+
+var backgroundColorSelecter = document.getElementById("bgcolorselect");
+var backgroundColorSelecterLabel = document.getElementById("bgcolorselectlabel");
 
 var useDragging = true;
+
+var alwaysFullscreen = false;
+
+var getStylesButton = document.getElementById("getstyles");
+var styleEditor = document.getElementById("style-editor");
+var commitButton = document.getElementById("commit");
+
+var windowContainer = document.getElementById("windows");
 
 //绑定事件监听器
 for (var i = 0; i < backgroundColorPickers.length; i++) {
     backgroundColorPickers[i].addEventListener("click", function () {
         for (var i = 0; i < backgroundColorPickers.length; i++) {
-            backgroundColorPickers[i].dataset.selected = 'false';
             backgroundColorPickers[i].className = "bgcolorpicker";
         }
         this.dataset.selected = 'true';
         this.className = "bgcolorpicker selected";
-        root.style.setProperty("--main-bgcolor", this.dataset.color)
+        root.style.setProperty("--main-bgcolor", this.dataset.color);
         //main.style.backgroundColor = this.dataset.color;
     });
 }
 
+for (var i = 0; i < toolbars.length; i++) {
+    toolbars[i].addEventListener("click",function(){
+        console.log(document.getElementById(this.dataset.window))
+    })
+}
+
+backgroundColorSelecter.addEventListener("change",function(){
+    backgroundColorSelecterLabel.dataset.color = this.value;
+    backgroundColorSelecterLabel.style.backgroundColor = this.value;
+    root.style.setProperty("--main-bgcolor", this.value);
+})
+
+aboutWindow.addEventListener("touchstart",() => {
+    window.setTimeout(() => {
+        //var node = aboutWindow.cloneNode(true);
+        var lastChild = windowContainer.lastElementChild;
+        if (lastChild != aboutWindow) {
+            windowContainer.removeChild(aboutWindow);
+            windowContainer.appendChild(aboutWindow);
+        }
+    },2);
+});
 showAbout.addEventListener("click", () => {
     aboutWindow.style.display = "block";
 });
 closeAbout.addEventListener("click", () => {
     aboutWindow.style.display = "none";
+    alwaysFullscreen = false;
+});
+maximizeAbout.addEventListener("click",() => {
+    if (!alwaysFullscreen) {
+        alwaysFullscreen = true;
+    }
+    else {
+        alwaysFullscreen = false;
+    }
 });
 aboutToolbar.addEventListener("mousedown", (e) => {
     isAboutDragging = true;
@@ -258,6 +304,16 @@ toggleRepeat.addEventListener("mousedown", () => {
     }
 });
 
+getStylesButton.addEventListener("click",() => {
+    styleEditor.value = "";
+    var styles = document.defaultView.getComputedStyle(root);
+    styleEditor.value += "--main-bgcolor: " + styles.getPropertyValue("--main-bgcolor") + ";";
+});
+
+commitButton.addEventListener("click",() => {
+    root.style = styleEditor.value;
+})
+
 //定义相关函数功能
 function showmenu() {
     if (toggleMenu.dataset.menushow === "false") {
@@ -326,14 +382,13 @@ if (window.innerWidth < 400) {
     alert("当前浏览器窗口过小,可能会导致一些问题,请放大窗口或更换大屏设备。");
 }
 window.setInterval(() => {
-    if (window.innerWidth < 400) {
+    if (window.innerWidth < 400 || alwaysFullscreen) {
         useDragging = false;
         helpWindow.className = "window fullscreen";
         aboutWindow.className = "window fullscreen";
         styleSettingsWindow.className = "window fullscreen";
-        console.log(helpWindow.className);
     }
-    else {
+    else if (!alwaysFullscreen){
         useDragging = true;
         helpWindow.className = "window";
         aboutWindow.className = "window";
