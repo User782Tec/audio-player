@@ -28,23 +28,18 @@ var repeat = document.getElementById("again");
 var toggleRepeat = document.getElementById("togglerepeat");
 
 var aboutWindow = document.getElementById("about");
-var showAbout = document.getElementById("showabout");
-var closeAbout = document.getElementById("closeabout");
-var maximizeAbout = document.getElementById("maximizeabout");
 var aboutToolbar = document.getElementById("abouttoolbar");
 
 var helpWindow = document.getElementById("help");
-var showHelp = document.getElementById("showhelp");
-var closeHelp = document.getElementById("closehelp");
 var helpToolbar = document.getElementById("helptoolbar");
 
+var windows = document.getElementsByClassName("window");
 var showWindows = document.getElementsByClassName("showwindow");
 var closeWindows = document.getElementsByClassName("close");
 var toolbars = document.getElementsByClassName("toolbar");
+var maximizeWindows = document.getElementsByClassName("maximum");
 
 var styleSettingsWindow = document.getElementById("stylesettings");
-var showStyleSetting = document.getElementById("showstylesettings");
-var closeStyleSettings = document.getElementById("closestylesettings");
 var styleSettingsToolbar = document.getElementById("stylesettingstoolbar");
 
 const menu = document.getElementById("menu");
@@ -99,43 +94,29 @@ for (var i = 0; i < backgroundColorPickers.length; i++) {
     });
 }
 
-for (var i = 0; i < toolbars.length; i++) {
-    toolbars[i].addEventListener("click",function(){
-        console.log(document.getElementById(this.dataset.window))
-    })
+for (var i = 0; i < showWindows.length; i++) {
+    showWindows[i].addEventListener("click", showWindow);
 }
 
-backgroundColorSelecter.addEventListener("change",function(){
+for (var i = 0; i < closeWindows.length; i++) {
+    closeWindows[i].addEventListener("click", closeWindow);
+}
+
+for (var i = 0; i < windows.length; i++) {
+    windows[i].addEventListener("touchstart", showFirst);
+    windows[i].addEventListener("mousedown", showFirst);
+}
+
+for (var i = 0; i < maximizeWindows.length; i++) {
+    maximizeWindows[i].addEventListener("click", windowFullscreen);
+}
+
+backgroundColorSelecter.addEventListener("change", function () {
     backgroundColorSelecterLabel.dataset.color = this.value;
     backgroundColorSelecterLabel.style.backgroundColor = this.value;
     root.style.setProperty("--main-bgcolor", this.value);
-})
+});
 
-aboutWindow.addEventListener("touchstart",() => {
-    window.setTimeout(() => {
-        //var node = aboutWindow.cloneNode(true);
-        var lastChild = windowContainer.lastElementChild;
-        if (lastChild != aboutWindow) {
-            windowContainer.removeChild(aboutWindow);
-            windowContainer.appendChild(aboutWindow);
-        }
-    },2);
-});
-showAbout.addEventListener("click", () => {
-    aboutWindow.style.display = "block";
-});
-closeAbout.addEventListener("click", () => {
-    aboutWindow.style.display = "none";
-    alwaysFullscreen = false;
-});
-maximizeAbout.addEventListener("click",() => {
-    if (!alwaysFullscreen) {
-        alwaysFullscreen = true;
-    }
-    else {
-        alwaysFullscreen = false;
-    }
-});
 aboutToolbar.addEventListener("mousedown", (e) => {
     isAboutDragging = true;
     aboutLeft = e.pageX - Number(aboutWindow.style.left.split("px")[0]);
@@ -159,12 +140,6 @@ aboutToolbar.addEventListener("touchmove", (e) => {
     }
 });
 
-showHelp.addEventListener("click", () => {
-    helpWindow.style.display = "block"
-});
-closeHelp.addEventListener("click", () => {
-    helpWindow.style.display = "none";
-});
 helpToolbar.addEventListener("mousedown", (e) => {
     isHelpDragging = true;
     helpLeft = e.pageX - Number(helpWindow.style.left.split("px")[0]);
@@ -188,12 +163,6 @@ helpToolbar.addEventListener("touchmove", (e) => {
     }
 });
 
-showStyleSetting.addEventListener("click", () => {
-    styleSettingsWindow.style.display = "block"
-});
-closeStyleSettings.addEventListener("click", () => {
-    styleSettingsWindow.style.display = "none";
-});
 styleSettingsToolbar.addEventListener("mousedown", (e) => {
     isStyleSettingsDragging = true;
     styleSettingsLeft = e.pageX - Number(styleSettingsWindow.style.left.split("px")[0]);
@@ -304,13 +273,13 @@ toggleRepeat.addEventListener("mousedown", () => {
     }
 });
 
-getStylesButton.addEventListener("click",() => {
+getStylesButton.addEventListener("click", () => {
     styleEditor.value = "";
     var styles = document.defaultView.getComputedStyle(root);
     styleEditor.value += "--main-bgcolor: " + styles.getPropertyValue("--main-bgcolor") + ";";
 });
 
-commitButton.addEventListener("click",() => {
+commitButton.addEventListener("click", () => {
     root.style = styleEditor.value;
 })
 
@@ -367,6 +336,36 @@ function play() {
     }
 }
 
+function showFirst() {
+    var thisWindow = this;
+    window.setTimeout(() => {
+        //var node = aboutWindow.cloneNode(true);
+        var lastChild = windowContainer.lastElementChild;
+        if (lastChild != thisWindow) {
+            windowContainer.removeChild(thisWindow);
+            windowContainer.appendChild(thisWindow);
+        }
+    }, 2);
+}
+
+function windowFullscreen() {
+    if (!alwaysFullscreen) {
+        alwaysFullscreen = true;
+    }
+    else {
+        alwaysFullscreen = false;
+    }
+}
+
+function showWindow() {
+    document.getElementById(this.dataset.window).style.display = "block";
+}
+
+function closeWindow() {
+    document.getElementById(this.dataset.window).style.display = "none";
+    alwaysFullscreen = false;
+}
+
 //设置定时循环程序
 window.setInterval(() => {
     if (document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement) {
@@ -375,23 +374,16 @@ window.setInterval(() => {
     else {
         fullscreenIcon.className = "fa fa-expand";
     }
-}, 20);
-
-//初始化的程序
-if (window.innerWidth < 400) {
-    alert("当前浏览器窗口过小,可能会导致一些问题,请放大窗口或更换大屏设备。");
-}
-window.setInterval(() => {
     if (window.innerWidth < 400 || alwaysFullscreen) {
         useDragging = false;
         helpWindow.className = "window fullscreen";
         aboutWindow.className = "window fullscreen";
         styleSettingsWindow.className = "window fullscreen";
     }
-    else if (!alwaysFullscreen){
+    else if (!alwaysFullscreen) {
         useDragging = true;
         helpWindow.className = "window";
         aboutWindow.className = "window";
         styleSettingsWindow.className = "window";
     }
-},10);
+}, 20);
