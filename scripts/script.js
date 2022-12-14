@@ -111,91 +111,21 @@ for (var i = 0; i < maximizeWindows.length; i++) {
     maximizeWindows[i].addEventListener("click", windowFullscreen);
 }
 
+for (var i = 0; i < toolbars.length; i++) {
+    toolbars[i].addEventListener("touchstart", startTouchDragging);
+    toolbars[i].addEventListener("touchmove", touchDragging);
+    toolbars[i].addEventListener("mousedown", startMouseDragging);
+    toolbars[i].addEventListener("mousemove", mouseDragging);
+}
+
 backgroundColorSelecter.addEventListener("change", function () {
     backgroundColorSelecterLabel.dataset.color = this.value;
     backgroundColorSelecterLabel.style.backgroundColor = this.value;
     root.style.setProperty("--main-bgcolor", this.value);
 });
 
-aboutToolbar.addEventListener("mousedown", (e) => {
-    isAboutDragging = true;
-    aboutLeft = e.pageX - Number(aboutWindow.style.left.split("px")[0]);
-    aboutTop = e.pageY - Number(aboutWindow.style.top.split("px")[0]);
-});
-aboutToolbar.addEventListener("mousemove", (e) => {
-    if (isAboutDragging && useDragging) {
-        aboutWindow.style.left = e.pageX - aboutLeft;
-        aboutWindow.style.top = e.pageY - aboutTop;
-    }
-});
-aboutToolbar.addEventListener("touchstart", (e) => {
-    isAboutDragging = true;
-    aboutLeft = e.touches[0].pageX - Number(aboutWindow.style.left.split("px")[0]);
-    aboutTop = e.touches[0].pageY - Number(aboutWindow.style.top.split("px")[0]);
-});
-aboutToolbar.addEventListener("touchmove", (e) => {
-    if (isAboutDragging && useDragging) {
-        aboutWindow.style.left = e.touches[0].pageX - aboutLeft;
-        aboutWindow.style.top = e.touches[0].pageY - aboutTop;
-    }
-});
-
-helpToolbar.addEventListener("mousedown", (e) => {
-    isHelpDragging = true;
-    helpLeft = e.pageX - Number(helpWindow.style.left.split("px")[0]);
-    helpTop = e.pageY - Number(helpWindow.style.top.split("px")[0]);
-});
-helpToolbar.addEventListener("mousemove", (e) => {
-    if (isHelpDragging && useDragging) {
-        helpWindow.style.left = e.pageX - helpLeft;
-        helpWindow.style.top = e.pageY - helpTop;
-    }
-});
-helpToolbar.addEventListener("touchstart", (e) => {
-    isHelpDragging = true;
-    helpLeft = e.touches[0].pageX - Number(helpWindow.style.left.split("px")[0]);
-    helpTop = e.touches[0].pageY - Number(helpWindow.style.top.split("px")[0]);
-});
-helpToolbar.addEventListener("touchmove", (e) => {
-    if (isHelpDragging && useDragging) {
-        helpWindow.style.left = e.touches[0].pageX - helpLeft;
-        helpWindow.style.top = e.touches[0].pageY - helpTop;
-    }
-});
-
-styleSettingsToolbar.addEventListener("mousedown", (e) => {
-    isStyleSettingsDragging = true;
-    styleSettingsLeft = e.pageX - Number(styleSettingsWindow.style.left.split("px")[0]);
-    styleSettingsTop = e.pageY - Number(styleSettingsWindow.style.top.split("px")[0]);
-});
-styleSettingsToolbar.addEventListener("mousemove", (e) => {
-    if (isStyleSettingsDragging && useDragging) {
-        styleSettingsWindow.style.left = e.pageX - styleSettingsLeft;
-        styleSettingsWindow.style.top = e.pageY - styleSettingsTop;
-    }
-});
-styleSettingsToolbar.addEventListener("touchstart", (e) => {
-    isStyleSettingsDragging = true;
-    styleSettingsLeft = e.touches[0].pageX - Number(styleSettingsWindow.style.left.split("px")[0]);
-    styleSettingsTop = e.touches[0].pageY - Number(styleSettingsWindow.style.top.split("px")[0]);
-});
-styleSettingsToolbar.addEventListener("touchmove", (e) => {
-    if (isStyleSettingsDragging && useDragging) {
-        styleSettingsWindow.style.left = e.touches[0].pageX - styleSettingsLeft;
-        styleSettingsWindow.style.top = e.touches[0].pageY - styleSettingsTop;
-    }
-});
-
-window.addEventListener("mouseup", () => {
-    isAboutDragging = false;
-    isHelpDragging = false;
-    isStyleSettingsDragging = false;
-});
-window.addEventListener("touchend", () => {
-    isAboutDragging = false;
-    isHelpDragging = false;
-    isStyleSettingsDragging = false;
-});
+window.addEventListener("touchend",finishDragging);
+window.addEventListener("mouseup",finishDragging);
 
 playButton.addEventListener("click", play);
 togglePlay.addEventListener("mousedown", () => {
@@ -351,11 +281,14 @@ function showFirst() {
 function windowFullscreen() {
     if (!alwaysFullscreen) {
         alwaysFullscreen = true;
+        this.lastElementChild.className = "fa fa-window-restore";
     }
     else {
         alwaysFullscreen = false;
+        this.lastElementChild.className = "fa fa-window-maximize";
     }
 }
+
 
 function showWindow() {
     document.getElementById(this.dataset.window).style.display = "block";
@@ -364,6 +297,40 @@ function showWindow() {
 function closeWindow() {
     document.getElementById(this.dataset.window).style.display = "none";
     alwaysFullscreen = false;
+    for (var i = 0; i < maximizeWindows.length; i++) {
+        maximizeWindows[i].lastChild.className = "fa fa-window-maximize";
+    }
+}
+
+function startTouchDragging(e) {
+    this.dataset.dragging = true;
+    this.dataset.left = e.touches[0].pageX - document.getElementById(this.dataset.window).style.left.split("px")[0];
+    this.dataset.top = e.touches[0].pageY - document.getElementById(this.dataset.window).style.top.split("px")[0];
+}
+function touchDragging(e) {
+    if (this.dataset.dragging === "true" && useDragging) {
+        this.style.cursor = "grabbing";
+        document.getElementById(this.dataset.window).style.left = e.touches[0].pageX - this.dataset.left;
+        document.getElementById(this.dataset.window).style.top = e.touches[0].pageY - this.dataset.top;
+    }
+}
+function startMouseDragging(e) {
+    this.dataset.dragging = "true";
+    this.dataset.left = e.pageX - document.getElementById(this.dataset.window).style.left.split("px")[0];
+    this.dataset.top = e.pageY - document.getElementById(this.dataset.window).style.top.split("px")[0];
+}
+function mouseDragging(e) {
+    if (this.dataset.dragging === "true" && useDragging) {
+        this.style.cursor = "grabbing";
+        document.getElementById(this.dataset.window).style.left = e.pageX - this.dataset.left;
+        document.getElementById(this.dataset.window).style.top = e.pageY - this.dataset.top;
+    }
+}
+function finishDragging() {
+    for (var i = 0; i < toolbars.length; i++) {
+        toolbars[i].dataset.dragging = "false";
+        toolbars[i].style.cursor = "grab";
+    }
 }
 
 //设置定时循环程序
