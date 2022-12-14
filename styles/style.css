@@ -1,5 +1,27 @@
 :root {
+    --main-font-family: serif;
+    --main-color: black;
     --main-bgcolor: white;
+    --main-bgimg: none;
+    --main-bgsize: auto 100%;
+    --menu-bgcolor: white;
+    --menu-bgimg: none;
+    --menu-bgsize: auto 100%;
+    --menu-border-width: 1px;
+    --menu-border-style: solid;
+    --menu-border-color: skyblue;
+    --menu-border-radius: 10px;
+    --window-toolbar-bgcolor: white;
+    --window-toolbar-bgimg: none;
+    --window-toolbar-bgsize: 100% auto;
+    --window-toolbar-button-color: black;
+    --window-bgcolor: #fafafa;
+    --window-bgimg: none;
+    --window-bgsize: 100% auto;
+    --window-border-width: 0px;
+    --window-border-style: none;
+    --window-border-color: black;
+    --audio-fileupload-bgcolor: skyblue;
 }
 
 textarea {
@@ -61,7 +83,7 @@ label {
 
 label.file-btn {
     position: absolute;
-    background-color: skyblue;
+    background-color: var(--audio-fileupload-bgcolor);
     text-align: center;
     padding: 0.15em;
     width: 157px;
@@ -74,12 +96,17 @@ body {
 }
 
 .container {
+    background-color: var(--menu-bgcolor);
     position: absolute;
     bottom: 20px;
     width: 80%;
-    border-width: 1px;
-    border-color: skyblue;
-    border-radius: 10px;
+    border-width: var(--menu-border-width);
+    border-color: var(--menu-border-color);
+    border-style: var(--menu-border-style);
+    border-radius: var(--menu-border-radius);
+    background-image: var(--menu-bgimg);
+    background-size: var(--menu-bgsize);
+    background-repeat: no-repeat;
     /*transition: all 0.5s;*/
     padding: 10px;
 }
@@ -121,7 +148,12 @@ label.icon-btn {
 }
 
 #main {
+    font-family: var(--main-font-family);
     background-color: var(--main-bgcolor);
+    color: var(--main-color);
+    background-image: var(--main-bgimg);
+    background-size: var(--main-bgsize);
+    background-repeat: no-repeat;
     width: 100%;
     height: 100%;
 }
@@ -150,13 +182,6 @@ label.icon-btn {
     background-color: #fafafa;
 }
 
-.window:fullscreen {
-    top: 0px !important;
-    left: 0px !important;
-    width: 100% !important;
-    height: 100% !important;
-}
-
 .bgcolorpicker {
     display: inline-block;
     width: 1em;
@@ -177,7 +202,7 @@ label.icon-btn {
     box-shadow: 0px 2px 1px lightgray;
 }*/
 .fullscreen {
-    width: 100% !important;
+    width: calc(100% - 20px) !important;
     height: 100% !important;
     top: 0px !important;
     left: 0px !important;
