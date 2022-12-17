@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -7,34 +8,41 @@
     <title>Web Audio Player</title>
     <link rel="stylesheet" type="text/css" href="styles/style.css">
     <link rel="stylesheet" type="text/css" href="docs/css/style.css">
+    <!--Font awesome图标字体库-->
     <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
-    <!--Font awesome图标库-->
 </head>
 
 <body id="body">
+    <!--主元素-->
     <div id="main">
+        <!--双击操作-->
         <div class="control left-top" id="togglemenu" data-menushow="true"></div>
         <div class="control right-top" id="togglefullscreen"></div>
         <div class="control left-bottom" id="toggleplay"></div>
-        <div class="control right-bottom" id="togglerepeat"></div>
+        <div class="control right-bottom" id="togglereplay"></div>
+        <!--菜单-->
         <dialog class="container" id="menu" open="open">
+            <!--上传音频文件按钮-->
             <label for="files" class="file-btn">上传文件</label>
             <input type="file" id="files">
+            <!--音轨-->
             <audio id="audio"></audio>
+            <!--菜单按钮-->
             <label id="showmenu" class="icon-btn"><i class="fa fa-close"></i></label>
             <label data-playing="false" id="play" class="icon-btn"><i class="fa fa-play" id="play-icon"></i></label>
             <label id="fullscreen" class="icon-btn"><i class="fa fa-expand" id="fullscreen-icon"></i></label>
-            <label id="again" class="icon-btn"><i class="fa fa-refresh"></i></label>
+            <label id="replay" class="icon-btn"><i class="fa fa-refresh"></i></label>
             <label id="showabout" class="showwindow icon-btn" data-window="about"><i class="fa fa-info"></i></label>
             <label id="showhelp" class="showwindow icon-btn" data-window="help"><i
                     class="fa fa-question"></i></label><br /><br />
-            <label id="showstylesettings" class="showwindow" data-window="stylesettings">外观</label>
+            <label id="showstylesettings" class="showwindow" data-window="stylesettings">外观</label><br />
+            <div id="progress-container" class="hide">
+                <input type="range" id="progress" min="0" disabled="disabled" value="0">
+            </div>
         </dialog>
-        <!--<div class="control left-top" id="togglemenu" data-menushow="true"></div>
-            <div class="control right-top" id="togglefullscreen"></div>
-            <div class="control left-bottom" id="toggleplay"></div>
-            <div class="control right-bottom" id="togglerepeat"></div>-->
+        <!--窗口-->
         <div id="windows">
+            <!--帮助窗口-->
             <div class="window" id="help" style="top:5px;left:5px;">
                 <div class="toolbar" id="helptoolbar" data-window="help">帮助
                     <div class="toolbarbuttons">
@@ -75,6 +83,7 @@
                     </div>
                 </div>
             </div>
+            <!--关于窗口-->
             <div class="window" id="about" style="top:5px;left:5px;">
                 <div class="toolbar" id="abouttoolbar" data-window="about">关于
                     <div class="toolbarbuttons">
@@ -89,11 +98,12 @@
                         作者: User782Tec<br />
                         仓库地址: <a href="https://github.com/User782Tec/audio-player"
                             target="_blank">User782Tec/audio-player</a><br />
-                        当前版本: 0.4.1beta2<br />
-                        最后更新日期: 2022.12.14
+                        当前版本: 0.4.1<br />
+                        最后更新日期: 2022.12.17
                     </p>
                 </div>
             </div>
+            <!--外观窗口-->
             <div class="window" id="stylesettings" style="top:5px;left:5px;">
                 <div class="toolbar" id="stylesettingstoolbar" data-window="stylesettings">外观
                     <div class="toolbarbuttons">

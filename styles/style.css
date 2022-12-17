@@ -22,10 +22,12 @@
     --window-border-style: none;
     --window-border-color: black;
     --audio-fileupload-bgcolor: skyblue;
+    --window-toolbar-close-color: black;
+    --colorselector-selected-color: orange;
 }
 
 textarea {
-    width: calc(100% - 6px);
+    width: calc(100% - 10px);
     height: 200px;
     transition: all 0.3s;
 }
@@ -58,17 +60,35 @@ html {
     touch-action: none;
 }
 
+body,html {
+    height: 100%;
+}
+
 input[type=file] {
     display: none;
     /*opacity: 0;*/
     position: absolute;
+    background-color: var(--audio-fileupload-bgcolor);
+}
+
+input[type=range] {
+    width: 100%;
+    opacity: 1.0;
 }
 
 input[type=color] {
-    opacity: 0;
+    opacity: 0.0;
     width: 0px;
     height: 0px;
     position: absolute;
+}
+
+.hide {
+    display: none;
+}
+
+.show {
+    display: block;
 }
 
 iframe {
@@ -175,11 +195,16 @@ label.icon-btn {
 
 .window {
     position: absolute;
-    background-color: white;
+    background-image: var(--window-bgimg);
+    background-size: var(--window-bgsize);
+    background-color: var(--window-bgcolor);
     padding: 10px;
     display: none;
     box-shadow: 0px 0px 7.5px gray;
     background-color: #fafafa;
+    border-width: var(--window-border-width);
+    border-style: var(--window-border-style);
+    border-color: var(--window-border-color);
 }
 
 .bgcolorpicker {
@@ -192,7 +217,7 @@ label.icon-btn {
 }
 
 .selected {
-    box-shadow: 0 0 0 1px white, 0 0 0 3px orange;
+    box-shadow: 0 0 0 1px white, 0 0 0 3px var(--colorselector-selected-color);
     /*outline-style: solid;
     outline-width: 2px;
     outline-color: orange;*/
@@ -202,7 +227,7 @@ label.icon-btn {
     box-shadow: 0px 2px 1px lightgray;
 }*/
 .fullscreen {
-    width: calc(100% - 20px) !important;
+    width: 100% !important;
     height: 100% !important;
     top: 0px !important;
     left: 0px !important;
@@ -252,7 +277,9 @@ label.icon-btn {
     top: 0px;
     height: 1em;
     width: calc(100% - 10px);
-    background-color: white;
+    background-color: var(--window-toolbar-bgcolor);
+    background-image: var(--window-toolbar-bgimg);
+    background-size: var(--window-toolbar-bgsize);
 }
 
 .toolbarbuttons {
@@ -268,6 +295,7 @@ label.icon-btn {
     display: inline-block;
     text-align: center;
     margin-top: 1px;
+    color: var(--window-toolbar-button-color);
 }
 
 .maximum {
@@ -277,11 +305,12 @@ label.icon-btn {
 .close {
     right: 10px;
     transition: all 0.3s;
+    color: var(--window-toolbar-close-color) !important;
 }
 
 .close:hover {
     background-color: red;
-    color: white;
+    color: white !important;
 }
 
 .window-title {

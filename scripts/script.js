@@ -24,14 +24,8 @@ var ctrlFullscreen = document.getElementById("fullscreen");
 var fullscreenIcon = document.getElementById("fullscreen-icon");
 var toggleFullscreen = document.getElementById("togglefullscreen");
 
-var repeat = document.getElementById("again");
-var toggleRepeat = document.getElementById("togglerepeat");
-
-var aboutWindow = document.getElementById("about");
-var aboutToolbar = document.getElementById("abouttoolbar");
-
-var helpWindow = document.getElementById("help");
-var helpToolbar = document.getElementById("helptoolbar");
+var replay = document.getElementById("replay");
+var toggleReplay = document.getElementById("togglereplay");
 
 var windows = document.getElementsByClassName("window");
 var showWindows = document.getElementsByClassName("showwindow");
@@ -55,14 +49,7 @@ var isAboutDragging = false;
 var isHelpDragging = false;
 var isStyleSettingsDragging = false;
 
-var prevClick = { play: 0, fullscreen: 0, menu: 0, repeat: 0 };
-
-var aboutLeft;
-var aboutTop;
-var helpLeft;
-var helpTop;
-var styleSettingsLeft;
-var styleSettingsTop;
+var prevClick = { play: 0, fullscreen: 0, menu: 0, replay: 0 };
 
 var root = document.querySelector(":root");
 
@@ -80,6 +67,10 @@ var styleEditor = document.getElementById("style-editor");
 var commitButton = document.getElementById("commit");
 
 var windowContainer = document.getElementById("windows");
+
+var progressContainer = document.getElementById("progress-container");
+var progressBar = document.getElementById("progress");
+var progressing;
 
 //绑定事件监听器
 for (var i = 0; i < backgroundColorPickers.length; i++) {
@@ -145,21 +136,26 @@ audioElement.addEventListener("ended", () => {
     playIcon.className = "fa fa-play";
 });
 
-reader.addEventListener("loadend", () => {
+/*reader.addEventListener("loadend", () => {
     console.log("解析完毕");
     audioElement.src = reader.result;
     //track = audioContext.createMediaElementSource(audioElement);
     track.connect(audioContext.destination);
     track.connect(gain).connect(audioContext.destination);
-});
+});*/
 fileElement.addEventListener("change", () => {
     audioElement.pause();
     playButton.dataset.playing = "false";
     playIcon.className = "fa fa-play"
     fileElement = document.getElementById("files");
     //audioElement = document.getElementById("audio");
-    reader.readAsDataURL(fileElement.files[0]);
     console.log("开始解析");
+    var audioUrl = URL.createObjectURL(fileElement.files[0]);
+    console.log("解析完毕");
+    audioElement.src = audioUrl;
+    track.connect(audioContext.destination);
+    track.connect(gain).connect(audioContext.destination);
+    progress();
 });
 
 toggleMenu.addEventListener("mousedown", () => {
@@ -188,14 +184,14 @@ toggleFullscreen.addEventListener("mousedown", () => {
     }
 });
 
-repeat.addEventListener("click", () => {
+replay.addEventListener("click", () => {
     audioElement.currentTime = 0;
 });
-toggleRepeat.addEventListener("mousedown", () => {
-    if (prevClick.repeat == 0) {
-        prevClick.repeat = 1;
+toggleReplay.addEventListener("mousedown", () => {
+    if (prevClick.replay == 0) {
+        prevClick.replay = 1;
         window.setTimeout(() => {
-            prevClick.repeat = 0;
+            prevClick.replay = 0;
         }, 300);
     }
     else {
@@ -206,12 +202,22 @@ toggleRepeat.addEventListener("mousedown", () => {
 getStylesButton.addEventListener("click", () => {
     styleEditor.value = "";
     var styles = document.defaultView.getComputedStyle(root);
-    styleEditor.value += "--main-bgcolor: " + styles.getPropertyValue("--main-bgcolor") + ";";
+    styleEditor.value += 
+    "--main-bgcolor: " + styles.getPropertyValue("--main-bgcolor") + ";\n" +
+    "--main-font-family: " + styles.getPropertyValue("--main-font-family") + ";\n" +
+    "--main-color: " + styles.getPropertyValue("--main-color") + ";\n" +
+    "--main-bgsize" + styles.getPropertyValue("--main-bgsize") + ";\n" +
+    "--main-bgimg: " + styles.getPropertyValue("--main-bgimg") + ";\n";
 });
 
 commitButton.addEventListener("click", () => {
     root.style = styleEditor.value;
-})
+});
+
+progressBar.addEventListener("touchstart",stopProgress);
+progressBar.addEventListener("touchend",startProgress);
+progressBar.addEventListener("mousedown",stopProgress);
+progressBar.addEventListener("mouseup",startProgress)
 
 //定义相关函数功能
 function showmenu() {
@@ -292,6 +298,7 @@ function windowFullscreen() {
 
 function showWindow() {
     document.getElementById(this.dataset.window).style.display = "block";
+    showFirst.call(document.getElementById(this.dataset.window));
 }
 
 function closeWindow() {
@@ -310,8 +317,8 @@ function startTouchDragging(e) {
 function touchDragging(e) {
     if (this.dataset.dragging === "true" && useDragging) {
         this.style.cursor = "grabbing";
-        document.getElementById(this.dataset.window).style.left = e.touches[0].pageX - this.dataset.left;
-        document.getElementById(this.dataset.window).style.top = e.touches[0].pageY - this.dataset.top;
+        document.getElementById(this.dataset.window).style.left = e.touches[0].pageX - this.dataset.left + "px";
+        document.getElementById(this.dataset.window).style.top = e.touches[0].pageY - this.dataset.top + "px";
     }
 }
 function startMouseDragging(e) {
@@ -322,8 +329,8 @@ function startMouseDragging(e) {
 function mouseDragging(e) {
     if (this.dataset.dragging === "true" && useDragging) {
         this.style.cursor = "grabbing";
-        document.getElementById(this.dataset.window).style.left = e.pageX - this.dataset.left;
-        document.getElementById(this.dataset.window).style.top = e.pageY - this.dataset.top;
+        document.getElementById(this.dataset.window).style.left = e.pageX - this.dataset.left + "px";
+        document.getElementById(this.dataset.window).style.top = e.pageY - this.dataset.top + "px";
     }
 }
 function finishDragging() {
@@ -332,6 +339,31 @@ function finishDragging() {
         toolbars[i].style.cursor = "grab";
     }
 }
+
+function progress() {
+    progressContainer.className = "show";
+    progressing = window.setInterval(syncProgress,20);
+}
+function stopProgress() {
+    window.clearInterval(progressing);
+    audioElement.pause();
+    progressBar.disabled = false;
+}
+function startProgress() {
+    audioElement.currentTime = progressBar.value / 10000;
+    audioElement.play();
+    progressing = window.setInterval(syncProgress,20);
+    progressBar.disabled = "disabled";
+}
+function syncProgress() {
+    progressBar.value = audioElement.currentTime * 10000;
+    progressBar.max = audioElement.duration * 10000;
+}
+function deleteProgress() {
+    clearInterval(progressing);
+    progressContainer.className = "hide";
+}
+
 
 //设置定时循环程序
 window.setInterval(() => {
@@ -343,14 +375,14 @@ window.setInterval(() => {
     }
     if (window.innerWidth < 400 || alwaysFullscreen) {
         useDragging = false;
-        helpWindow.className = "window fullscreen";
-        aboutWindow.className = "window fullscreen";
-        styleSettingsWindow.className = "window fullscreen";
+        for (var i = 0; i < windows.length; i++) {
+            windows[i].className = "window fullscreen";
+        }
     }
     else if (!alwaysFullscreen) {
         useDragging = true;
-        helpWindow.className = "window";
-        aboutWindow.className = "window";
-        styleSettingsWindow.className = "window";
+        for (var i = 0; i < windows.length; i++) {
+            windows[i].className = "window";
+        }
     }
 }, 20);
