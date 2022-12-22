@@ -1,6 +1,6 @@
 'use strict';
 
-//变量声明与定义
+//变量声明与赋值
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 const audioContext = new AudioContext();
 
@@ -9,32 +9,32 @@ const main = document.getElementById("main");
 const exitFullscreen = document.exitFullscreen || document.mozCancelFullScreen || document.webkitExitFullscreen;
 const fullScreen = main.requestFullscreen || main.mozRequestFullScreen || main.webkitRequestFullscreen;
 
-var playButton = document.getElementById("play");
-var togglePlay = document.getElementById("toggleplay");
-var playIcon = document.getElementById("play-icon");
+const playButton = document.getElementById("play");
+const togglePlay = document.getElementById("toggleplay");
+const playIcon = document.getElementById("play-icon");
 
-var fileElement = document.getElementById("files");
+const fileElement = document.getElementById("files");
 
-var audioElement = document.getElementById("audio");
+const audioElement = document.getElementById("audio");
 
-var ctrlMenu = document.getElementById("showmenu");
-var toggleMenu = document.getElementById("togglemenu");
+const ctrlMenu = document.getElementById("showmenu");
+const toggleMenu = document.getElementById("togglemenu");
 
-var ctrlFullscreen = document.getElementById("fullscreen");
-var fullscreenIcon = document.getElementById("fullscreen-icon");
-var toggleFullscreen = document.getElementById("togglefullscreen");
+const ctrlFullscreen = document.getElementById("fullscreen");
+const fullscreenIcon = document.getElementById("fullscreen-icon");
+const toggleFullscreen = document.getElementById("togglefullscreen");
 
-var replay = document.getElementById("replay");
-var toggleReplay = document.getElementById("togglereplay");
+const replay = document.getElementById("replay");
+const toggleReplay = document.getElementById("togglereplay");
 
-var windows = document.getElementsByClassName("window");
-var showWindows = document.getElementsByClassName("showwindow");
-var closeWindows = document.getElementsByClassName("close");
-var toolbars = document.getElementsByClassName("toolbar");
-var maximizeWindows = document.getElementsByClassName("maximum");
+const windows = document.getElementsByClassName("window");
+const showWindows = document.getElementsByClassName("showwindow");
+const closeWindows = document.getElementsByClassName("close");
+const toolbars = document.getElementsByClassName("toolbar");
+const maximizeWindows = document.getElementsByClassName("maximum");
 
-var styleSettingsWindow = document.getElementById("stylesettings");
-var styleSettingsToolbar = document.getElementById("stylesettingstoolbar");
+const styleSettingsWindow = document.getElementById("stylesettings");
+const styleSettingsToolbar = document.getElementById("stylesettingstoolbar");
 
 const menu = document.getElementById("menu");
 
@@ -43,34 +43,36 @@ const date = new Date();
 
 const gain = audioContext.createGain();
 
-var track = audioContext.createMediaElementSource(audioElement);
+const track = audioContext.createMediaElementSource(audioElement);
 
-var isAboutDragging = false;
-var isHelpDragging = false;
-var isStyleSettingsDragging = false;
+const prevClick = { play: 0, fullscreen: 0, menu: 0, replay: 0 };
 
-var prevClick = { play: 0, fullscreen: 0, menu: 0, replay: 0 };
+const root = document.querySelector(":root");
 
-var root = document.querySelector(":root");
+const colorPickers = document.getElementsByClassName("colorpicker");
+const backgroundColorPickers = document.getElementsByClassName("bgcolorpicker");
 
-var backgroundColorPickers = document.getElementsByClassName("bgcolorpicker");
-
-var backgroundColorSelecter = document.getElementById("bgcolorselect");
-var backgroundColorSelecterLabel = document.getElementById("bgcolorselectlabel");
+const backgroundColorSelecter = document.getElementById("bgcolorselect");
+const backgroundColorSelecterLabel = document.getElementById("bgcolorselectlabel");
+const staticColor = document.getElementById("static-color");
+const linearGradient = document.getElementById("linear-gradient");
 
 var useDragging = true;
 
 var alwaysFullscreen = false;
 
-var getStylesButton = document.getElementById("getstyles");
-var styleEditor = document.getElementById("style-editor");
-var commitButton = document.getElementById("commit");
+const getStylesButton = document.getElementById("getstyles");
+const styleEditor = document.getElementById("style-editor");
+const commitButton = document.getElementById("commit");
+const downloadStylesButton = document.getElementById("downloadstyles");
 
-var windowContainer = document.getElementById("windows");
+const windowContainer = document.getElementById("windows");
 
-var progressContainer = document.getElementById("progress-container");
-var progressBar = document.getElementById("progress");
+const progressContainer = document.getElementById("progress-container");
+const progressBar = document.getElementById("progress");
 var progressing;
+
+const backgroundType = document.getElementsByClassName("background-type");
 
 //绑定事件监听器
 for (var i = 0; i < backgroundColorPickers.length; i++) {
@@ -81,8 +83,14 @@ for (var i = 0; i < backgroundColorPickers.length; i++) {
         this.dataset.selected = 'true';
         this.className = "bgcolorpicker selected";
         root.style.setProperty("--main-bgcolor", this.dataset.color);
+        staticColor.dataset.color = this.dataset.color;
         //main.style.backgroundColor = this.dataset.color;
     });
+}
+
+//为颜色选择器添加颜色
+for (var i = 0; i < colorPickers.length; i++) {
+    colorPickers[i].style.backgroundColor = colorPickers[i].dataset.color;
 }
 
 for (var i = 0; i < showWindows.length; i++) {
@@ -109,31 +117,24 @@ for (var i = 0; i < toolbars.length; i++) {
     toolbars[i].addEventListener("mousemove", mouseDragging);
 }
 
-backgroundColorSelecter.addEventListener("change", function () {
-    backgroundColorSelecterLabel.dataset.color = this.value;
-    backgroundColorSelecterLabel.style.backgroundColor = this.value;
-    root.style.setProperty("--main-bgcolor", this.value);
-});
+for (var i = 0; i < backgroundType.length; i++) {
+    backgroundType[i].addEventListener("mousedown", chooseBackground);
+}
 
-window.addEventListener("touchend",finishDragging);
-window.addEventListener("mouseup",finishDragging);
+backgroundColorSelecter.addEventListener("change", selectorColor(function () {
+    root.style.setProperty("--main-bgcolor", backgroundColorSelecter.value)
+}));
+
+window.addEventListener("touchend", finishDragging);
+window.addEventListener("mouseup", finishDragging);
 
 playButton.addEventListener("click", play);
-togglePlay.addEventListener("mousedown", () => {
-    if (prevClick.play == 0) {
-        prevClick.play = 1;
-        window.setTimeout(() => {
-            prevClick.play = 0;
-        }, 300);
-    }
-    else {
-        play();
-    }
-});
+togglePlay.addEventListener("mousedown", dblclick(play, "play"));
 
 audioElement.addEventListener("ended", () => {
     playButton.dataset.playing = "false";
     playIcon.className = "fa fa-play";
+    restartProgress()
 });
 
 /*reader.addEventListener("loadend", () => {
@@ -147,7 +148,7 @@ fileElement.addEventListener("change", () => {
     audioElement.pause();
     playButton.dataset.playing = "false";
     playIcon.className = "fa fa-play"
-    fileElement = document.getElementById("files");
+    //fileElement = document.getElementById("files");
     //audioElement = document.getElementById("audio");
     console.log("开始解析");
     var audioUrl = URL.createObjectURL(fileElement.files[0]);
@@ -155,71 +156,44 @@ fileElement.addEventListener("change", () => {
     audioElement.src = audioUrl;
     track.connect(audioContext.destination);
     track.connect(gain).connect(audioContext.destination);
-    progress();
+    addProgress();
 });
 
-toggleMenu.addEventListener("mousedown", () => {
-    if (prevClick.menu == 0) {
-        prevClick.menu = 1;
-        window.setTimeout(() => {
-            prevClick.menu = 0;
-        }, 300);
-    }
-    else {
-        showmenu();
-    }
-});
+toggleMenu.addEventListener("mousedown", dblclick(showmenu, "menu"));
 ctrlMenu.addEventListener("click", showmenu);
 
 ctrlFullscreen.addEventListener("click", fullscreen);
-toggleFullscreen.addEventListener("mousedown", () => {
-    if (prevClick.fullscreen == 0) {
-        prevClick.fullscreen = 1;
-        window.setTimeout(() => {
-            prevClick.fullscreen = 0;
-        }, 300);
-    }
-    else {
-        fullscreen();
-    }
-});
+toggleFullscreen.addEventListener("mousedown", dblclick(fullscreen, "fullscreen"));
 
-replay.addEventListener("click", () => {
-    audioElement.currentTime = 0;
-});
-toggleReplay.addEventListener("mousedown", () => {
-    if (prevClick.replay == 0) {
-        prevClick.replay = 1;
-        window.setTimeout(() => {
-            prevClick.replay = 0;
-        }, 300);
-    }
-    else {
-        audioElement.currentTime = 0;
-    }
-});
+replay.addEventListener("click", restartProgress);
+toggleReplay.addEventListener("mousedown", dblclick(restartProgress, "replay"));
 
 getStylesButton.addEventListener("click", () => {
-    styleEditor.value = "";
-    var styles = document.defaultView.getComputedStyle(root);
-    styleEditor.value += 
-    "--main-bgcolor: " + styles.getPropertyValue("--main-bgcolor") + ";\n" +
-    "--main-font-family: " + styles.getPropertyValue("--main-font-family") + ";\n" +
-    "--main-color: " + styles.getPropertyValue("--main-color") + ";\n" +
-    "--main-bgsize" + styles.getPropertyValue("--main-bgsize") + ";\n" +
-    "--main-bgimg: " + styles.getPropertyValue("--main-bgimg") + ";\n";
+    styleEditor.value = getStyles();
 });
 
 commitButton.addEventListener("click", () => {
-    root.style = styleEditor.value;
+    var value = styleEditor.value.split(";\n");
+    var commitStyles = "";
+    //防止用户提交非法样式
+    for (var i = 0; i < value.length; i++) {
+        if (value[i].split(": ")[0].match("--")) {
+            commitStyles += `${value[i]};`;
+        }
+    }
+    root.setAttribute("style", commitStyles);
 });
 
-progressBar.addEventListener("touchstart",stopProgress);
-progressBar.addEventListener("touchend",startProgress);
-progressBar.addEventListener("mousedown",stopProgress);
-progressBar.addEventListener("mouseup",startProgress)
+progressBar.addEventListener("touchstart", stopProgress);
+progressBar.addEventListener("touchend", startProgress);
+progressBar.addEventListener("mousedown", stopProgress);
+progressBar.addEventListener("mouseup", startProgress);
+
+downloadStylesButton.addEventListener("click", downloadStyles);
 
 //定义相关函数功能
+
+//显示/隐藏菜单
 function showmenu() {
     if (toggleMenu.dataset.menushow === "false") {
         menu.open = "open";
@@ -231,6 +205,7 @@ function showmenu() {
     }
 }
 
+//全屏模式
 function fullscreen() {
     if (document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement) {
         if (exitFullscreen) {
@@ -250,9 +225,10 @@ function fullscreen() {
     }
 }
 
+//播放音频功能
 function play() {
     try {
-        playButton = document.getElementById("play");
+        //playButton = document.getElementById("play");
         if (audioContext.state === "suspended") {
             audioContext.resume();
         }
@@ -272,6 +248,7 @@ function play() {
     }
 }
 
+//将正在拖动的窗口置于最上面显示
 function showFirst() {
     var thisWindow = this;
     window.setTimeout(() => {
@@ -284,6 +261,7 @@ function showFirst() {
     }, 2);
 }
 
+//窗口的“全屏模式”方法
 function windowFullscreen() {
     if (!alwaysFullscreen) {
         alwaysFullscreen = true;
@@ -295,7 +273,7 @@ function windowFullscreen() {
     }
 }
 
-
+//打开/关闭窗口
 function showWindow() {
     document.getElementById(this.dataset.window).style.display = "block";
     showFirst.call(document.getElementById(this.dataset.window));
@@ -309,6 +287,7 @@ function closeWindow() {
     }
 }
 
+//拖动相关功能
 function startTouchDragging(e) {
     this.dataset.dragging = true;
     this.dataset.left = e.touches[0].pageX - document.getElementById(this.dataset.window).style.left.split("px")[0];
@@ -317,8 +296,8 @@ function startTouchDragging(e) {
 function touchDragging(e) {
     if (this.dataset.dragging === "true" && useDragging) {
         this.style.cursor = "grabbing";
-        document.getElementById(this.dataset.window).style.left = e.touches[0].pageX - this.dataset.left + "px";
-        document.getElementById(this.dataset.window).style.top = e.touches[0].pageY - this.dataset.top + "px";
+        document.getElementById(this.dataset.window).style.left = `${e.touches[0].pageX - this.dataset.left}px`;
+        document.getElementById(this.dataset.window).style.top = `${e.touches[0].pageY - this.dataset.top}px`;
     }
 }
 function startMouseDragging(e) {
@@ -329,8 +308,8 @@ function startMouseDragging(e) {
 function mouseDragging(e) {
     if (this.dataset.dragging === "true" && useDragging) {
         this.style.cursor = "grabbing";
-        document.getElementById(this.dataset.window).style.left = e.pageX - this.dataset.left + "px";
-        document.getElementById(this.dataset.window).style.top = e.pageY - this.dataset.top + "px";
+        document.getElementById(this.dataset.window).style.left = `${e.pageX - this.dataset.left}px`;
+        document.getElementById(this.dataset.window).style.top = `${e.pageY - this.dataset.top}px`;
     }
 }
 function finishDragging() {
@@ -340,9 +319,10 @@ function finishDragging() {
     }
 }
 
-function progress() {
+//音频进度条相关功能
+function addProgress() {
     progressContainer.className = "show";
-    progressing = window.setInterval(syncProgress,20);
+    progressing = window.setInterval(syncProgress, 20);
 }
 function stopProgress() {
     window.clearInterval(progressing);
@@ -352,7 +332,7 @@ function stopProgress() {
 function startProgress() {
     audioElement.currentTime = progressBar.value / 10000;
     audioElement.play();
-    progressing = window.setInterval(syncProgress,20);
+    progressing = window.setInterval(syncProgress, 20);
     progressBar.disabled = "disabled";
 }
 function syncProgress() {
@@ -363,7 +343,113 @@ function deleteProgress() {
     clearInterval(progressing);
     progressContainer.className = "hide";
 }
+function restartProgress() {
+    progressBar.value = 0;
+    audioElement.currentTime = 0;
+}
 
+//获取样式
+function getStyles() {
+    var styles = window.getComputedStyle(root, null);
+    var result = "";
+    for (var i = 0; i < styles.length; i++) {
+        if (styles[i].match("--")) {
+            result += `${styles[i]}: ${styles.getPropertyValue(styles[i])};\n`;
+        }
+    }
+    return result;
+}
+
+//判断颜色深浅
+function color(hex) {
+    hex = hex.split("#")[1];
+    var r = parseInt(`${hex[0]}${hex[1]}`, 16);
+    var g = parseInt(`${hex[2]}${hex[3]}`, 16);
+    var b = parseInt(`${hex[4]}${hex[5]}`, 16);
+    var k = 0;
+    if (r < 88) {
+        k++;
+    }
+    if (g < 88) {
+        k++;
+    }
+    if (b < 88) {
+        k++;
+    }
+    if (k < 2) {
+        return false;
+    }
+    else {
+        return true;
+    }
+}
+
+//下载样式
+function downloadStyles() {
+    var style = getStyles();
+    download(style, "text/css");
+}
+
+//下载功能
+function download(text, type) {
+    var blob = new Blob([text], { "type": type });
+    var element = document.createElement("a");
+    element.href = URL.createObjectURL(blob);
+    element.style.display = "none";
+    element.download = "style.css";
+    main.appendChild(element);
+    element.click();
+    main.removeChild(element);
+}
+
+//双击事件判断处理方法
+function dblclick(fn, key) {
+    return function () {
+        if (prevClick[key] == 0) {
+            prevClick[key] = 1;
+            window.setTimeout(() => {
+                prevClick[key] = 0;
+            }, 300);
+        }
+        else {
+            prevClick[key] = 0;
+            fn();
+        }
+    }
+}
+
+function selectorColor(fn) {
+    return function () {
+        this.parentElement.dataset.color = this.value;
+        this.parentElement.style.backgroundColor = this.value;
+        if (color(this.value)) {
+            this.parentElement.style.color = "#dddddd";
+        }
+        else {
+            this.parentElement.style.color = "#222222";
+        }
+        fn();
+    }
+}
+
+function chooseBackground() {
+    document.getElementById(this.dataset.open).className = "selector";
+    document.getElementById(this.dataset.close).className = "selector disabled";
+    if (this.dataset.open === "static-color") {
+        setProperty("--main-bgcolor", staticColor.dataset.color);
+        clearProperty("--main-bgimg");
+    }
+    else if (this.dataset.open === "linear-gradient") {
+        clearProperty("--main-bgcolor");
+    }
+}
+
+function clearProperty(property_name) {
+    root.style.setProperty(property_name, "none");
+}
+function setProperty(property_name, value) {
+    root.style.setProperty(property_name, value);
+}
 
 //设置定时循环程序
 window.setInterval(() => {
