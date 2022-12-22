@@ -7,7 +7,6 @@
     <meta name="format-detection" content="telephone=no,email=no" />
     <title>Web Audio Player</title>
     <link rel="stylesheet" type="text/css" href="styles/style.css">
-    <link rel="stylesheet" type="text/css" href="docs/css/style.css">
     <!--Font awesome图标字体库-->
     <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
 </head>
@@ -28,14 +27,14 @@
             <!--音轨-->
             <audio id="audio"></audio>
             <!--菜单按钮-->
-            <label id="showmenu" class="icon-btn"><i class="fa fa-close"></i></label>
-            <label data-playing="false" id="play" class="icon-btn"><i class="fa fa-play" id="play-icon"></i></label>
-            <label id="fullscreen" class="icon-btn"><i class="fa fa-expand" id="fullscreen-icon"></i></label>
-            <label id="replay" class="icon-btn"><i class="fa fa-refresh"></i></label>
-            <label id="showabout" class="showwindow icon-btn" data-window="about"><i class="fa fa-info"></i></label>
-            <label id="showhelp" class="showwindow icon-btn" data-window="help"><i
-                    class="fa fa-question"></i></label><br /><br />
-            <label id="showstylesettings" class="showwindow" data-window="stylesettings">外观</label><br />
+            <div id="showmenu" class="icon-btn"><i class="fa fa-close"></i></div>
+            <div data-playing="false" id="play" class="icon-btn"><i class="fa fa-play" id="play-icon"></i></div>
+            <div id="fullscreen" class="icon-btn"><i class="fa fa-expand" id="fullscreen-icon"></i></div>
+            <div id="replay" class="icon-btn"><i class="fa fa-refresh"></i></div>
+            <div id="showabout" class="showwindow icon-btn" data-window="about"><i class="fa fa-info"></i></div>
+            <div id="showhelp" class="showwindow icon-btn" data-window="help"><i
+                    class="fa fa-question"></i></div><br /><br />
+            <div id="showstylesettings" class="showwindow inline" data-window="stylesettings">外观</div><br />
             <div id="progress-container" class="hide">
                 <input type="range" id="progress" min="0" disabled="disabled" value="0">
             </div>
@@ -50,32 +49,32 @@
                         <div class="toolbar-btn close" data-window="help"><i class="fa fa-close"></i>
                         </div>
                     </div>
-                </div><br />
+                </div>
                 <!--<iframe src="docs/help.html"></iframe>-->
-                <div class="regular content">
+                <div class="content">
                     <div>
-                        <h1 class="large">简介</h1>
-                        <p>
+                        <div class="large">简介</div>
+                        <div class="regular">
                             这是一个在线音频播放器，可以自行导入音频并播放(详见<a href="https://github.com/User782Tec/audio-player/#readme"
                                 target="_blank">本仓库的README文件</a>)
-                        </p>
-                        <h1 class="large">菜单</h1>
-                        <p>
+                        </div>
+                        <div class="large">菜单</div>
+                        <div class="regular">
                             <i class="fa fa-close"></i>: 关闭菜单<br />
                             <i class="fa fa-play"></i>/<i class="fa fa-pause"></i>: 播放/暂停<br />
                             <i class="fa fa-expand"></i>/<i class="fa fa-compress"></i>: 进入/退出全屏模式<br />
                             <i class="fa fa-refresh"></i>: 重新播放<br />
                             <i class="fa fa-info"></i>: 打开关于窗口<br />
                             <i class="fa fa-question"></i>: 打开帮助窗口
-                        </p>
-                        <h1 class="large">双击操作</h1>
-                        <p>
+                        </div>
+                        <div class="large">双击操作</div>
+                        <div class="regular">
                             左上角: 显示/隐藏菜单<br />
                             右上角: 进入/退出全屏模式<br />
                             左下角: 播放/暂停<br />
                             右下角: 重新播放
-                        </p>
-                        <h1 class="large">使用方法</h1>
+                        </div>
+                        <div class="large">使用方法</div>
                         <ol>
                             <li>通过“上传文件按钮上传自己的音频文件;</li>
                             <li>点击<i class="fa fa-play"></i>按钮播放。</li>
@@ -91,16 +90,16 @@
                         <div class="toolbar-btn close" data-window="about"><i class="fa fa-close"></i>
                         </div>
                     </div>
-                </div><br />
+                </div>
                 <!--<iframe src="docs/about.html"></iframe>-->
-                <div class="regular content">
-                    <p>
+                <div class="content">
+                    <div class="regular">
                         作者: User782Tec<br />
                         仓库地址: <a href="https://github.com/User782Tec/audio-player"
                             target="_blank">User782Tec/audio-player</a><br />
-                        当前版本: 0.4.1<br />
-                        最后更新日期: 2022.12.17
-                    </p>
+                        当前版本: 0.4.2beta1<br />
+                        最后更新日期: 2022.12.22
+                    </div>
                 </div>
             </div>
             <!--外观窗口-->
@@ -110,25 +109,33 @@
                         <div class="toolbar-btn maximum"><i class="fa fa-window-maximize"></i></div>
                         <div class="toolbar-btn close" data-window="stylesettings"><i class="fa fa-close"></i></div>
                     </div>
-                </div><br />
-                <div id="bgcolor" class="regular">
-                    <div class="content">
+                </div>
+                <div id="bgcolor">
+                    <div class="regular content">
                         <div class="window-title large">背景</div>
-                        <div class="bgcolorpicker" data-color="red"></div>
-                        <div class="bgcolorpicker" data-color="orange"></div>
-                        <div class="bgcolorpicker" data-color="yellow"></div>
-                        <div class="bgcolorpicker" data-color="green"></div>
-                        <div class="bgcolorpicker" data-color="cyan"></div>
-                        <div class="bgcolorpicker" data-color="blue"></div>
-                        <div class="bgcolorpicker" data-color="purple"></div>
-                        <div class="bgcolorpicker" data-color="black"></div>
-                        <div class="bgcolorpicker selected" data-color="white"></div>
-                        <label for="bgcolorselect" class="bgcolorpicker" id="bgcolorselectlabel"
-                            data-color="black"><input type="color" id="bgcolorselect"></label>
+                        <label class="background-type" data-open="static-color" data-close="linear-gradient"><input type="radio" name="background" checked="checked" data-open="static-color" data-close="linear-gradient">静态颜色</label><br />
+                        <div class="selector" id="static-color" data-color="white">
+                            <div class="bgcolorpicker colorpicker" data-color="red"></div>
+                            <div class="bgcolorpicker colorpicker" data-color="orange"></div>
+                            <div class="bgcolorpicker colorpicker" data-color="yellow"></div>
+                            <div class="bgcolorpicker colorpicker" data-color="green"></div>
+                            <div class="bgcolorpicker colorpicker" data-color="cyan"></div>
+                            <div class="bgcolorpicker colorpicker" data-color="blue"></div>
+                            <div class="bgcolorpicker colorpicker" data-color="purple"></div>
+                            <div class="bgcolorpicker colorpicker" data-color="black"></div>
+                            <div class="bgcolorpicker colorpicker selected" data-color="white"></div>
+                            <label for="bgcolorselect" class="bgcolorpicker colorpicker colorselector" id="bgcolorselectlabel"
+                                data-color="black"><input type="color" id="bgcolorselect"><i class="fa fa-ellipsis-h ellipsis"></i></label>
+                        </div>
+                        <label class="background-type" data-open="linear-gradient" data-close="static-color"><input type="radio" name="background" data-open="linear-gradient" data-color="static-color">渐变色</label>
+                        <div class="selector disabled" id="linear-gradient">
+                            <div id="addcolor" class="button"><i class="fa fa-plus"></i> 添加颜色</div>
+                        </div>
                         <div class="window-title large">高级</div>
                         <div>修改样式(开发者)<div class="buttons right">
                                 <div class="button" id="commit">更新</div>
                                 <div class="button" id="getstyles">生成当前样式配置</div>
+                                <div class="button" id="downloadstyles">下载当前样式配置</div>
                             </div>
                         </div>
                         <div>
