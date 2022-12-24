@@ -32,8 +32,8 @@
             <div id="fullscreen" class="icon-btn"><i class="fa fa-expand" id="fullscreen-icon"></i></div>
             <div id="replay" class="icon-btn"><i class="fa fa-refresh"></i></div>
             <div id="showabout" class="showwindow icon-btn" data-window="about"><i class="fa fa-info"></i></div>
-            <div id="showhelp" class="showwindow icon-btn" data-window="help"><i
-                    class="fa fa-question"></i></div><br /><br />
+            <div id="showhelp" class="showwindow icon-btn" data-window="help"><i class="fa fa-question"></i></div>
+            <br /><br />
             <div id="showstylesettings" class="showwindow inline" data-window="stylesettings">外观</div><br />
             <div id="progress-container" class="hide">
                 <input type="range" id="progress" min="0" disabled="disabled" value="0">
@@ -97,8 +97,8 @@
                         作者: User782Tec<br />
                         仓库地址: <a href="https://github.com/User782Tec/audio-player"
                             target="_blank">User782Tec/audio-player</a><br />
-                        当前版本: 0.4.2beta1<br />
-                        最后更新日期: 2022.12.22
+                        当前版本: 0.4.2beta2<br />
+                        最后更新日期: 2022.12.24
                     </div>
                 </div>
             </div>
@@ -110,43 +110,60 @@
                         <div class="toolbar-btn close" data-window="stylesettings"><i class="fa fa-close"></i></div>
                     </div>
                 </div>
-                <div id="bgcolor">
-                    <div class="regular content">
-                        <div class="window-title large">背景</div>
-                        <label class="background-type" data-open="static-color" data-close="linear-gradient"><input type="radio" name="background" checked="checked" data-open="static-color" data-close="linear-gradient">静态颜色</label><br />
-                        <div class="selector" id="static-color" data-color="white">
-                            <div class="bgcolorpicker colorpicker" data-color="red"></div>
-                            <div class="bgcolorpicker colorpicker" data-color="orange"></div>
-                            <div class="bgcolorpicker colorpicker" data-color="yellow"></div>
-                            <div class="bgcolorpicker colorpicker" data-color="green"></div>
-                            <div class="bgcolorpicker colorpicker" data-color="cyan"></div>
-                            <div class="bgcolorpicker colorpicker" data-color="blue"></div>
-                            <div class="bgcolorpicker colorpicker" data-color="purple"></div>
-                            <div class="bgcolorpicker colorpicker" data-color="black"></div>
-                            <div class="bgcolorpicker colorpicker selected" data-color="white"></div>
-                            <label for="bgcolorselect" class="bgcolorpicker colorpicker colorselector" id="bgcolorselectlabel"
-                                data-color="black"><input type="color" id="bgcolorselect"><i class="fa fa-ellipsis-h ellipsis"></i></label>
-                        </div>
-                        <label class="background-type" data-open="linear-gradient" data-close="static-color"><input type="radio" name="background" data-open="linear-gradient" data-color="static-color">渐变色</label>
-                        <div class="selector disabled" id="linear-gradient">
-                            <div id="addcolor" class="button"><i class="fa fa-plus"></i> 添加颜色</div>
-                        </div>
-                        <div class="window-title large">高级</div>
-                        <div>修改样式(开发者)<div class="buttons right">
-                                <div class="button" id="commit">更新</div>
-                                <div class="button" id="getstyles">生成当前样式配置</div>
-                                <div class="button" id="downloadstyles">下载当前样式配置</div>
+                <div class="regular content">
+                    <div class="window-title large">背景</div>
+                    <label class="background-type" data-open="static-color" data-close="linear-gradient"><input type="radio" name="background" checked="checked" data-open="static-color" data-close="linear-gradient">静态颜色</label><br />
+                    <div class="selector" id="static-color" data-color="white">
+                        <div class="bgcolorpicker colorpicker" data-color="red"></div>
+                        <div class="bgcolorpicker colorpicker" data-color="orange"></div>
+                        <div class="bgcolorpicker colorpicker" data-color="yellow"></div>
+                        <div class="bgcolorpicker colorpicker" data-color="green"></div>
+                        <div class="bgcolorpicker colorpicker" data-color="cyan"></div>
+                        <div class="bgcolorpicker colorpicker" data-color="blue"></div>
+                        <div class="bgcolorpicker colorpicker" data-color="purple"></div>
+                        <div class="bgcolorpicker colorpicker" data-color="black"></div>
+                        <div class="bgcolorpicker colorpicker selected" data-color="white"></div>
+                        <label for="bgcolorselect" class="bgcolorpicker colorpicker colorselector"
+                            id="bgcolorselectlabel" data-color="black"><input type="color" id="bgcolorselect"><i
+                                class="fa fa-ellipsis-h ellipsis"></i></label>
+                    </div>
+                    <label class="background-type" data-open="linear-gradient" data-close="static-color"><input type="radio" name="background" data-open="linear-gradient" data-color="static-color">渐变色</label>
+                    <div class="selector disabled" id="linear-gradient">
+                        <div>
+                            从 <span id="gradient-from">下</span> 至
+                            <div class="select" id="gradient-from-to">
+                                <div class="select-title" id="gradient-to">上<div class="select-arrow"><i class="fa fa-sort-down"></i></div>
+                                </div>
+                                <div class="select-content">
+                                    <div class="option option-selected" data-to="上" data-from="下" data-value="top">上</div>
+                                    <div class="option" data-to="下" data-from="上" data-value="bottom">下</div>
+                                    <div class="option" data-to="左" data-from="右" data-value="left">左</div>
+                                    <div class="option" data-to="右" data-from="左" data-value="right">右</div>
+                                    <div class="option" data-to="左上" data-from="右下" data-value="left top">左上</div>
+                                    <div class="option" data-to="左下" data-from="右上" data-value="left bottom">左下</div>
+                                    <div class="option" data-to="右上" data-from="左下" data-value="right top">右上</div>
+                                    <div class="option" data-to="右下" data-from="左上" data-value="right bottom">右下</div>
+                                </div>
                             </div>
                         </div>
-                        <div>
-                            <textarea id="style-editor"></textarea>
+                        <div id="addcolor" class="button"><i class="fa fa-plus"></i> 添加颜色</div>
+                    </div>
+                    <div class="window-title large">高级</div>
+                    <div>修改样式(开发者)<div class="buttons right">
+                            <div class="button" id="commit">更新</div>
+                            <div class="button" id="getstyles">生成当前样式配置</div>
+                            <div class="button" id="downloadstyles">下载当前样式配置</div>
                         </div>
+                    </div>
+                    <div>
+                        <textarea id="style-editor"></textarea>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <script src="scripts/script.js"></script>
+    <script src="scripts/touch.js"></script>
 </body>
 
 </html>

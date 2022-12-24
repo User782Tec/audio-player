@@ -122,7 +122,8 @@ for (var i = 0; i < backgroundType.length; i++) {
 }
 
 backgroundColorSelecter.addEventListener("change", selectorColor(function () {
-    root.style.setProperty("--main-bgcolor", backgroundColorSelecter.value)
+    root.style.setProperty("--main-bgcolor", backgroundColorSelecter.value);
+    staticColor.dataset.color = backgroundColorSelecter.value;
 }));
 
 window.addEventListener("touchend", finishDragging);
@@ -387,16 +388,16 @@ function color(hex) {
 //下载样式
 function downloadStyles() {
     var style = getStyles();
-    download(style, "text/css");
+    download(style, "text/plain", "styles.txt");
 }
 
 //下载功能
-function download(text, type) {
+function download(text, type, file_name) {
     var blob = new Blob([text], { "type": type });
     var element = document.createElement("a");
     element.href = URL.createObjectURL(blob);
     element.style.display = "none";
-    element.download = "style.css";
+    element.download = file_name;
     main.appendChild(element);
     element.click();
     main.removeChild(element);
@@ -440,7 +441,7 @@ function chooseBackground() {
         clearProperty("--main-bgimg");
     }
     else if (this.dataset.open === "linear-gradient") {
-        clearProperty("--main-bgcolor");
+        setProperty("--main-bgcolor", "white");
     }
 }
 
