@@ -10,6 +10,22 @@
 
 由于需要进行重构，近期代码改动可能较大。
 
+### 友情链接
+
+#### 项目仓库网址
+
+gitee上本项目仓库的备份：[https://gitee.com/user-782/audio-player](https://gitee.com/user-782/audio-player)
+
+GitHub上的项目仓库地址：[https://github.com/User782Tec/audio-player](https://github.com/User782Tec/audio-player)
+
+#### Pages网页网址
+
+Netlify上构建的Pages（推荐）：[https://782-audio-player.netlify.app/](https://782-audio-player.netlify.app/)
+
+GitHub上构建的Pages：[https://user782tec.github.io/audio-player/](https://user782tec.github.io/audio-player/)
+
+Cloudflare上构建的Pages：[https://audio-player.pages.dev/](https://audio-player.pages.dev/)
+
 ### 主要功能
 
 将文件上传至网页后，用户可以控制相关的配置，并在线播放音频。
