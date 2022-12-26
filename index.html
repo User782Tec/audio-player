@@ -19,31 +19,37 @@
         <div class="control right-top" id="togglefullscreen"></div>
         <div class="control left-bottom" id="toggleplay"></div>
         <div class="control right-bottom" id="togglereplay"></div>
+        <!--音轨-->
+        <audio id="audio"></audio>
         <!--菜单-->
-        <dialog class="container" id="menu" open="open">
-            <!--上传音频文件按钮-->
-            <label for="files" class="file-btn">上传文件</label>
-            <input type="file" id="files">
-            <!--音轨-->
-            <audio id="audio"></audio>
+        <div class="container" id="menu">
             <!--菜单按钮-->
-            <div id="showmenu" class="icon-btn"><i class="fa fa-close"></i></div>
-            <div data-playing="false" id="play" class="icon-btn"><i class="fa fa-play" id="play-icon"></i></div>
-            <div id="fullscreen" class="icon-btn"><i class="fa fa-expand" id="fullscreen-icon"></i></div>
-            <div id="replay" class="icon-btn"><i class="fa fa-refresh"></i></div>
-            <div id="showabout" class="showwindow icon-btn" data-window="about"><i class="fa fa-info"></i></div>
-            <div id="showhelp" class="showwindow icon-btn" data-window="help"><i class="fa fa-question"></i></div>
-            <br /><br />
-            <div id="showstylesettings" class="showwindow inline" data-window="stylesettings">外观</div><br />
+            <div class="left-entry">
+                <div id="showmenu" class="icon-btn"><i class="fa fa-close"></i></div>
+                <div data-playing="false" id="play" class="icon-btn"><i class="fa fa-play" id="play-icon"></i></div>
+                <div id="fullscreen" class="icon-btn"><i class="fa fa-expand" id="fullscreen-icon"></i></div>
+                <div id="replay" class="icon-btn"><i class="fa fa-refresh"></i></div>
+            </div>
+            <div class="center-entry">
+                <label class="file-btn" id="audio-file-btn" for="files">上传文件</label>
+                <input type="file" id="files">
+            </div>
+            <div class="right-entry">
+                <div class="showwindow icon-btn" data-window="about"><i class="fa fa-info"></i></div>
+                <div class="showwindow icon-btn" data-window="help"><i class="fa fa-question"></i></div>
+                <!--<div class="showwindow inline" data-window="stylesettings">外观</div>-->
+                <div class="showwindow icon-btn" data-window="settings"><i class="fa fa-cog"></i></div>
+            </div>
             <div id="progress-container" class="hide">
                 <input type="range" id="progress" min="0" disabled="disabled" value="0">
             </div>
-        </dialog>
+        </div>
         <!--窗口-->
         <div id="windows">
             <!--帮助窗口-->
             <div class="window" id="help" style="top:5px;left:5px;">
-                <div class="toolbar" id="helptoolbar" data-window="help">帮助
+                <div class="toolbar" data-window="help">
+                    <i class="fa fa-question"></i> 帮助
                     <div class="toolbarbuttons">
                         <div class="toolbar-btn maximum"><i class="fa fa-window-maximize"></i></div>
                         <div class="toolbar-btn close" data-window="help"><i class="fa fa-close"></i>
@@ -84,7 +90,8 @@
             </div>
             <!--关于窗口-->
             <div class="window" id="about" style="top:5px;left:5px;">
-                <div class="toolbar" id="abouttoolbar" data-window="about">关于
+                <div class="toolbar" data-window="about">
+                    <i class="fa fa-info"></i> 关于
                     <div class="toolbarbuttons">
                         <div class="toolbar-btn maximum"><i class="fa fa-window-maximize"></i></div>
                         <div class="toolbar-btn close" data-window="about"><i class="fa fa-close"></i>
@@ -97,14 +104,15 @@
                         作者: User782Tec<br />
                         仓库地址: <a href="https://github.com/User782Tec/audio-player"
                             target="_blank">User782Tec/audio-player</a><br />
-                        当前版本: 0.4.2beta2<br />
-                        最后更新日期: 2022.12.24
+                        当前版本: 0.4.2beta3<br />
+                        最后更新日期: 2022.12.26
                     </div>
                 </div>
             </div>
             <!--外观窗口-->
             <div class="window" id="stylesettings" style="top:5px;left:5px;">
-                <div class="toolbar" id="stylesettingstoolbar" data-window="stylesettings">外观
+                <div class="toolbar" data-window="stylesettings">
+                    <i class="fa fa-cog"></i> 外观
                     <div class="toolbarbuttons">
                         <div class="toolbar-btn maximum"><i class="fa fa-window-maximize"></i></div>
                         <div class="toolbar-btn close" data-window="stylesettings"><i class="fa fa-close"></i></div>
@@ -132,27 +140,28 @@
                         <div>
                             从 <span id="gradient-from">下</span> 至
                             <div class="select" id="gradient-from-to">
-                                <div class="select-title" id="gradient-to">上<div class="select-arrow"><i class="fa fa-sort-down"></i></div>
-                                </div>
+                                <div class="select-title"><span id="gradient-to">上</span><div class="select-arrow"><i class="fa fa-sort-down"></i></div></div>
                                 <div class="select-content">
-                                    <div class="option option-selected" data-to="上" data-from="下" data-value="top">上</div>
-                                    <div class="option" data-to="下" data-from="上" data-value="bottom">下</div>
-                                    <div class="option" data-to="左" data-from="右" data-value="left">左</div>
-                                    <div class="option" data-to="右" data-from="左" data-value="right">右</div>
-                                    <div class="option" data-to="左上" data-from="右下" data-value="left top">左上</div>
-                                    <div class="option" data-to="左下" data-from="右上" data-value="left bottom">左下</div>
-                                    <div class="option" data-to="右上" data-from="左下" data-value="right top">右上</div>
-                                    <div class="option" data-to="右下" data-from="左上" data-value="right bottom">右下</div>
+                                    <div class="option linear-gradient-option option-selected" data-to="上" data-from="下" data-value="top">上</div>
+                                    <div class="option linear-gradient-option" data-to="下" data-from="上" data-value="bottom">下</div>
+                                    <div class="option linear-gradient-option" data-to="左" data-from="右" data-value="left">左</div>
+                                    <div class="option linear-gradient-option" data-to="右" data-from="左" data-value="right">右</div>
+                                    <div class="option linear-gradient-option" data-to="左上" data-from="右下" data-value="left top">左上</div>
+                                    <div class="option linear-gradient-option" data-to="左下" data-from="右上" data-value="left bottom">左下</div>
+                                    <div class="option linear-gradient-option" data-to="右上" data-from="左下" data-value="right top">右上</div>
+                                    <div class="option linear-gradient-option" data-to="右下" data-from="左上" data-value="right bottom">右下</div>
                                 </div>
                             </div>
                         </div>
                         <div id="addcolor" class="button"><i class="fa fa-plus"></i> 添加颜色</div>
                     </div>
                     <div class="window-title large">高级</div>
-                    <div>修改样式(开发者)<div class="buttons right">
+                    <div>
+                        修改样式(开发者)
+                        <div class="buttons right">
                             <div class="button" id="commit">更新</div>
-                            <div class="button" id="getstyles">生成当前样式配置</div>
-                            <div class="button" id="downloadstyles">下载当前样式配置</div>
+                            <div class="button" id="getstyles">生成配置</div>
+                            <div class="button" id="downloadstyles">下载配置</div>
                         </div>
                     </div>
                     <div>
@@ -160,10 +169,24 @@
                     </div>
                 </div>
             </div>
+            <div class="window" id="settings" style="top:5px;left:5px;">
+                <div class="toolbar" data-window="settings">
+                    <i class="fa fa-cog"></i> 设置
+                    <div class="toolbarbuttons">
+                        <div class="toolbar-btn maximum"><i class="fa fa-window-maximize"></i></div>
+                        <div class="toolbar-btn close" data-window="settings"><i class="fa fa-close"></i></div>
+                    </div>
+                </div>
+                <div class="content regular">
+                    <div class="tab-container">
+                        <div class="tab large showwindow" data-window="stylesettings"><i class="fa fa-desktop"></i> 外观与个性化</div>
+                        <div class="tab large"></div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <script src="scripts/script.js"></script>
-    <script src="scripts/touch.js"></script>
 </body>
 
 </html>

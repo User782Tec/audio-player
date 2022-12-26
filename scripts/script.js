@@ -14,6 +14,7 @@ const togglePlay = document.getElementById("toggleplay");
 const playIcon = document.getElementById("play-icon");
 
 const fileElement = document.getElementById("files");
+const audioFileButton = document.getElementById("audio-file-btn");
 
 const audioElement = document.getElementById("audio");
 
@@ -56,6 +57,10 @@ const backgroundColorSelecter = document.getElementById("bgcolorselect");
 const backgroundColorSelecterLabel = document.getElementById("bgcolorselectlabel");
 const staticColor = document.getElementById("static-color");
 const linearGradient = document.getElementById("linear-gradient");
+
+const linearGradientTo = document.getElementById("gradient-to");
+const linearGradientFrom = document.getElementById("gradient-from");
+const linearGradientOptions = document.getElementsByClassName("linear-gradient-option");
 
 var useDragging = true;
 
@@ -119,6 +124,10 @@ for (var i = 0; i < toolbars.length; i++) {
 
 for (var i = 0; i < backgroundType.length; i++) {
     backgroundType[i].addEventListener("mousedown", chooseBackground);
+}
+
+for (var i = 0; i < linearGradientOptions.length; i++) {
+    linearGradientOptions[i].addEventListener("mousedown",selectLinearGradientDirection);
 }
 
 backgroundColorSelecter.addEventListener("change", selectorColor(function () {
@@ -197,11 +206,11 @@ downloadStylesButton.addEventListener("click", downloadStyles);
 //显示/隐藏菜单
 function showmenu() {
     if (toggleMenu.dataset.menushow === "false") {
-        menu.open = "open";
+        menu.className = "container";
         toggleMenu.dataset.menushow = "true";
     }
     else if (toggleMenu.dataset.menushow === "true") {
-        menu.open = false;
+        menu.className = "container hide";
         toggleMenu.dataset.menushow = "false";
     }
 }
@@ -332,7 +341,9 @@ function stopProgress() {
 }
 function startProgress() {
     audioElement.currentTime = progressBar.value / 10000;
-    audioElement.play();
+    if (playButton.dataset.playing) {
+        audioElement.play();
+    }
     progressing = window.setInterval(syncProgress, 20);
     progressBar.disabled = "disabled";
 }
@@ -450,6 +461,20 @@ function clearProperty(property_name) {
 }
 function setProperty(property_name, value) {
     root.style.setProperty(property_name, value);
+}
+
+function selectLinearGradientDirection() {
+    const selected = this;
+    setSelection(selected,linearGradientOptions,"option-selected","option linear-gradient-option");
+    linearGradientFrom.innerText = selected.dataset.from;
+    linearGradientTo.innerText = selected.dataset.to;
+}
+
+function setSelection(selected,elements,selected_className,unselected_className) {
+    for (var i = 0; i < elements.length; i++) {
+        elements[i].className = unselected_className;
+    }
+    selected.className += ` ${selected_className}`;
 }
 
 //设置定时循环程序
