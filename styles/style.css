@@ -58,9 +58,9 @@ textarea {
 
 .select-arrow {
     display: inline-block;
-    position: relative;
-    left: 15px;
-    bottom: 2px;
+    position: absolute;
+    right: 5px;
+    bottom: 3px;
 }
 
 .select-content {
@@ -75,7 +75,7 @@ textarea {
     padding-left: 5px;
 }
 
-.option:hover {
+.option:not(.option-selected):hover {
     background-color: #dadada;
 }
 
@@ -103,7 +103,7 @@ textarea:focus {
 
 .right {
     position: relative;
-    left: 100px;
+    left: 175px;
 }
 
 html {
@@ -153,7 +153,7 @@ input[type=radio] {
 }
 
 .hide {
-    display: none;
+    display: none !important;
 }
 
 .show {
@@ -175,9 +175,9 @@ label.file-btn {
     background-color: var(--audio-fileupload-bgcolor);
     text-align: center;
     padding: 0.15em;
-    width: 157px;
+    width: 30%;
     top: 7px;
-    left: calc(50% - 78.5px);
+    left: calc((100% - 30% - 0.3em) / 2);
 }
 
 body {
@@ -187,6 +187,8 @@ body {
 .container {
     background-color: var(--menu-bgcolor);
     position: absolute;
+    display: block;
+    left: calc((100% - 80% - 20px) / 2);
     bottom: 20px;
     width: 80%;
     border-width: var(--menu-border-width);
@@ -200,6 +202,14 @@ body {
     padding: 10px;
 }
 
+.left-entry, .center-entry, .right-entry {
+    display: inline-block;
+}
+
+.right-entry {
+    position: absolute;
+    right: 3px;
+}
 /*.container:hover {
     box-shadow: 0px 7px 3.5px gray;
 }*/
@@ -258,7 +268,7 @@ body {
     height: 300px;
 }
 
-#stylesettings {
+#stylesettings,#settings {
     width: 500px;
     height: 400px;
 }
@@ -373,10 +383,16 @@ ol {
     font-size: 0.8em;
 }
 
+.tab-container {
+    display: flex;
+}
+
 @media only screen and (max-width: 400px) {
     .container {
         width: 90%;
         font-size: 0.8em;
+        padding: 5px;
+        left: calc((100% - 90% - 10px) / 2);
     }
 
     .container.icon-btn {
@@ -385,8 +401,11 @@ ol {
     }
 
     label.file-btn {
-        width: 100px;
-        left: calc(75% - 50px);
+        top: 3px;
+        width: 23%;
+        padding-left: 1px;
+        padding-right: 1px;
+        left: calc((100% - 23% - 2px) / 2)
     }
 
     .window {
@@ -400,7 +419,6 @@ ol {
 
     .toolbar-btn {
         font-size: 0.9em;
-        height: 1em;
         right: 7px;
     }
 
@@ -414,7 +432,7 @@ ol {
         height: 200px;
     }
 
-    #stylesettings {
+    #stylesettings,#settings {
         width: 300px;
         height: 200px;
     }
@@ -423,11 +441,7 @@ ol {
 @media only screen and (min-width: 400px) and (max-width: 600px) {
     .container {
         width: 85%;
-    }
-
-    label.file-btn {
-        width: 120px;
-        left: calc(70% - 60px);
+        left: calc((100% - 85% - 20px) / 2);
     }
 
     .container.icon-btn {
