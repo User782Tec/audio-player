@@ -35,6 +35,7 @@
                 <input type="file" id="files">
             </div>
             <div class="right-entry">
+                <div class="showwindow icon-btn" data-window="store"><i class="fa fa-archive"></i></div>
                 <div class="showwindow icon-btn" data-window="about"><i class="fa fa-info"></i></div>
                 <div class="showwindow icon-btn" data-window="help"><i class="fa fa-question"></i></div>
                 <!--<div class="showwindow inline" data-window="stylesettings">外观</div>-->
@@ -94,8 +95,7 @@
                     <i class="fa fa-info"></i> 关于
                     <div class="toolbarbuttons">
                         <div class="toolbar-btn maximum"><i class="fa fa-window-maximize"></i></div>
-                        <div class="toolbar-btn close" data-window="about"><i class="fa fa-close"></i>
-                        </div>
+                        <div class="toolbar-btn close" data-window="about"><i class="fa fa-close"></i></div>
                     </div>
                 </div>
                 <!--<iframe src="docs/about.html"></iframe>-->
@@ -104,21 +104,23 @@
                         作者: User782Tec<br />
                         仓库地址: <a href="https://github.com/User782Tec/audio-player"
                             target="_blank">User782Tec/audio-player</a><br />
-                        当前版本: 0.4.2beta3<br />
-                        最后更新日期: 2022.12.26
+                        当前版本: 0.4.2beta4<br />
+                        最后更新日期: 2022.12.28
                     </div>
                 </div>
             </div>
             <!--外观窗口-->
             <div class="window" id="stylesettings" style="top:5px;left:5px;">
                 <div class="toolbar" data-window="stylesettings">
-                    <i class="fa fa-cog"></i> 外观
+                    <i class="fa fa-desktop"></i> 外观与个性化
                     <div class="toolbarbuttons">
                         <div class="toolbar-btn maximum"><i class="fa fa-window-maximize"></i></div>
                         <div class="toolbar-btn close" data-window="stylesettings"><i class="fa fa-close"></i></div>
                     </div>
                 </div>
                 <div class="regular content">
+                    <div class="window-title large">颜色主题</div>
+                    <div class="selector" id="color-theme"></div>
                     <div class="window-title large">背景</div>
                     <label class="background-type" data-open="static-color" data-close="linear-gradient"><input type="radio" name="background" checked="checked" data-open="static-color" data-close="linear-gradient">静态颜色</label><br />
                     <div class="selector" id="static-color" data-color="white">
@@ -155,8 +157,8 @@
                         </div>
                         <div id="addcolor" class="button"><i class="fa fa-plus"></i> 添加颜色</div>
                     </div>
-                    <div class="window-title large">高级</div>
-                    <div>
+                    <div class="window-title large">高级样式</div>
+                    <div class="section">
                         修改样式(开发者)
                         <div class="buttons right">
                             <div class="button" id="commit">更新</div>
@@ -169,9 +171,19 @@
                     </div>
                 </div>
             </div>
+            <div class="window" id="store" style="top:5px;left:5px">
+                <div class="toolbar" data-window="store">
+                    <i class="fa fa-archive"></i> 商店
+                    <div class="toolbarbuttons">
+                        <div class="toolbar-btn maximum"><i class="fa fa-window-maximize"></i></div>
+                        <div class="toolbar-btn close" data-window="store"><i class="fa fa-close"></i></div>
+                    </div>
+                </div>
+                <div class="content regular"></div>
+            </div>
             <div class="window" id="settings" style="top:5px;left:5px;">
                 <div class="toolbar" data-window="settings">
-                    <i class="fa fa-cog"></i> 设置
+                    <i class="fa fa-cog"></i> 设置中心
                     <div class="toolbarbuttons">
                         <div class="toolbar-btn maximum"><i class="fa fa-window-maximize"></i></div>
                         <div class="toolbar-btn close" data-window="settings"><i class="fa fa-close"></i></div>
@@ -179,8 +191,41 @@
                 </div>
                 <div class="content regular">
                     <div class="tab-container">
-                        <div class="tab large showwindow" data-window="stylesettings"><i class="fa fa-desktop"></i> 外观与个性化</div>
-                        <div class="tab large"></div>
+                        <div class="tab large showwindow" data-window="stylesettings">
+                            <i class="fa fa-desktop"></i>
+                            外观与个性化
+                            <div class="details">
+                                颜色主题｜背景｜菜单外观｜按钮外观｜高级样式
+                            </div>
+                        </div>
+                        <div class="tab large showwindow" data-window="audiosettings"> 
+                            <i class="fa fa-sliders"></i>
+                            音频播放设置(未实现)
+                            <div class="details">
+                                (待补充)
+                            </div>
+                        </div>
+                        <div class="tab large showwindow" data-window="userinterface">
+                            <i class="fa fa-tablet"></i>
+                            UI设置(未实现)
+                            <div class="details">
+                                歌词｜进度条｜文本｜图片｜音频播放数据｜(待补充)
+                            </div>
+                        </div>
+                        <div class="tab large showwindow" data-window="visualization">
+                            <i class="fa fa-signal"></i>
+                            音频可视化设置(未实现)
+                            <div class="details">
+                                (待补充)
+                            </div>
+                        </div>
+                        <div class="tab large showwindow" data-window="advanced">
+                            <i class="fa fa-cogs"></i>
+                            高级设置(未实现)
+                            <div class="details">
+                                兼容性解决方案｜(待补充)
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

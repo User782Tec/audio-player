@@ -79,55 +79,58 @@ var progressing;
 
 const backgroundType = document.getElementsByClassName("background-type");
 
+const colorTheme = document.getElementById("color-theme");
+
 //绑定事件监听器
-for (var i = 0; i < backgroundColorPickers.length; i++) {
-    backgroundColorPickers[i].addEventListener("click", function () {
-        for (var i = 0; i < backgroundColorPickers.length; i++) {
-            backgroundColorPickers[i].className = "bgcolorpicker";
+for (const elt of backgroundColorPickers) {
+    elt.addEventListener("click", function () {
+        for (const elt of backgroundColorPickers) {
+            elt.className = "bgcolorpicker";
         }
         this.dataset.selected = 'true';
         this.className = "bgcolorpicker selected";
         root.style.setProperty("--main-bgcolor", this.dataset.color);
         staticColor.dataset.color = this.dataset.color;
+        clearProperty("--main-bgimg");
         //main.style.backgroundColor = this.dataset.color;
     });
 }
 
 //为颜色选择器添加颜色
-for (var i = 0; i < colorPickers.length; i++) {
-    colorPickers[i].style.backgroundColor = colorPickers[i].dataset.color;
+for (const elt of colorPickers) {
+    elt.style.backgroundColor = elt.dataset.color;
 }
 
-for (var i = 0; i < showWindows.length; i++) {
-    showWindows[i].addEventListener("click", showWindow);
+for (const elt of showWindows) {
+    elt.addEventListener("click", showWindow);
 }
 
-for (var i = 0; i < closeWindows.length; i++) {
-    closeWindows[i].addEventListener("click", closeWindow);
+for (const elt of closeWindows) {
+    elt.addEventListener("click", closeWindow);
 }
 
-for (var i = 0; i < windows.length; i++) {
-    windows[i].addEventListener("touchstart", showFirst);
-    windows[i].addEventListener("mousedown", showFirst);
+for (const elt of windows) {
+    elt.addEventListener("touchstart", showFirst);
+    elt.addEventListener("mousedown", showFirst);
 }
 
-for (var i = 0; i < maximizeWindows.length; i++) {
-    maximizeWindows[i].addEventListener("click", windowFullscreen);
+for (const elt of maximizeWindows) {
+    elt.addEventListener("click", windowFullscreen);
 }
 
-for (var i = 0; i < toolbars.length; i++) {
-    toolbars[i].addEventListener("touchstart", startTouchDragging);
-    toolbars[i].addEventListener("touchmove", touchDragging);
-    toolbars[i].addEventListener("mousedown", startMouseDragging);
-    toolbars[i].addEventListener("mousemove", mouseDragging);
+for (const elt of toolbars) {
+    elt.addEventListener("touchstart", startTouchDragging);
+    elt.addEventListener("touchmove", touchDragging);
+    elt.addEventListener("mousedown", startMouseDragging);
+    elt.addEventListener("mousemove", mouseDragging);
 }
 
-for (var i = 0; i < backgroundType.length; i++) {
-    backgroundType[i].addEventListener("mousedown", chooseBackground);
+for (const elt of backgroundType) {
+    elt.addEventListener("mousedown", chooseBackground);
 }
 
-for (var i = 0; i < linearGradientOptions.length; i++) {
-    linearGradientOptions[i].addEventListener("mousedown",selectLinearGradientDirection);
+for (const elt of linearGradientOptions) {
+    elt.addEventListener("mousedown",selectLinearGradientDirection);
 }
 
 backgroundColorSelecter.addEventListener("change", selectorColor(function () {
@@ -186,9 +189,9 @@ commitButton.addEventListener("click", () => {
     var value = styleEditor.value.split(";\n");
     var commitStyles = "";
     //防止用户提交非法样式
-    for (var i = 0; i < value.length; i++) {
-        if (value[i].split(": ")[0].match("--")) {
-            commitStyles += `${value[i]};`;
+    for (const i in value) {
+        if (i.split(": ")[0].match("--")) {
+            commitStyles += `${i};`;
         }
     }
     root.setAttribute("style", commitStyles);
@@ -274,12 +277,10 @@ function showFirst() {
 //窗口的“全屏模式”方法
 function windowFullscreen() {
     if (!alwaysFullscreen) {
-        alwaysFullscreen = true;
-        this.lastElementChild.className = "fa fa-window-restore";
+        enableFullScreenMode();
     }
     else {
-        alwaysFullscreen = false;
-        this.lastElementChild.className = "fa fa-window-maximize";
+        disableFullScreenMode();
     }
 }
 
@@ -291,10 +292,7 @@ function showWindow() {
 
 function closeWindow() {
     document.getElementById(this.dataset.window).style.display = "none";
-    alwaysFullscreen = false;
-    for (var i = 0; i < maximizeWindows.length; i++) {
-        maximizeWindows[i].lastChild.className = "fa fa-window-maximize";
-    }
+    disableFullScreenMode();
 }
 
 //拖动相关功能
@@ -323,9 +321,9 @@ function mouseDragging(e) {
     }
 }
 function finishDragging() {
-    for (var i = 0; i < toolbars.length; i++) {
-        toolbars[i].dataset.dragging = "false";
-        toolbars[i].style.cursor = "grab";
+    for (const elt of toolbars) {
+        elt.dataset.dragging = "false";
+        elt.style.cursor = "grab";
     }
 }
 
@@ -341,7 +339,7 @@ function stopProgress() {
 }
 function startProgress() {
     audioElement.currentTime = progressBar.value / 10000;
-    if (playButton.dataset.playing) {
+    if (playButton.dataset.playing === "true") {
         audioElement.play();
     }
     progressing = window.setInterval(syncProgress, 20);
@@ -364,16 +362,16 @@ function restartProgress() {
 function getStyles() {
     var styles = window.getComputedStyle(root, null);
     var result = "";
-    for (var i = 0; i < styles.length; i++) {
-        if (styles[i].match("--")) {
-            result += `${styles[i]}: ${styles.getPropertyValue(styles[i])};\n`;
+    for (const i of styles) {
+        if (i.match("--")) {
+            result += `${i}: ${styles.getPropertyValue(i)};\n`;
         }
     }
     return result;
 }
 
 //判断颜色深浅
-function color(hex) {
+function colorDepth(hex) {
     hex = hex.split("#")[1];
     var r = parseInt(`${hex[0]}${hex[1]}`, 16);
     var g = parseInt(`${hex[2]}${hex[3]}`, 16);
@@ -434,7 +432,7 @@ function selectorColor(fn) {
     return function () {
         this.parentElement.dataset.color = this.value;
         this.parentElement.style.backgroundColor = this.value;
-        if (color(this.value)) {
+        if (colorDepth(this.value)) {
             this.parentElement.style.color = "#dddddd";
         }
         else {
@@ -471,10 +469,48 @@ function selectLinearGradientDirection() {
 }
 
 function setSelection(selected,elements,selected_className,unselected_className) {
-    for (var i = 0; i < elements.length; i++) {
-        elements[i].className = unselected_className;
+    for (const elt of elements) {
+        elt.className = unselected_className;
     }
     selected.className += ` ${selected_className}`;
+}
+
+async function getStylesStore() {
+    var filelist = await fetchText("https://cdn.jsdelivr.net/gh/User782Tec/audio-player-styles-repo@main/list.txt");
+    filelist = filelist.split("\n");
+    for (const file of filelist) {
+        if (file != "") {
+            var meta = await fetchText(`https://cdn.jsdelivr.net/gh/User782Tec/audio-player-styles-repo@main/${file}/meta.json`);
+            meta = JSON.parse(meta);
+            var style = await fetchText(`https://cdn.jsdelivr.net/gh/User782Tec/audio-player-styles-repo@main/${file}/${meta.styles}`);
+            var element = document.createElement("div");
+            element.dataset.style = style;
+            element.innerHTML = `${meta.name} 作者：${meta.authors}`;
+            colorTheme.appendChild(element);
+            element.addEventListener("click",function(){
+                root.setAttribute("style", this.dataset.style);
+            });
+        }
+    }
+}
+
+async function fetchText(url) {
+    var response = await fetch(url);
+    var text = await response.text();
+    return text;
+}
+
+function disableFullScreenMode() {
+    alwaysFullscreen = false;
+    for (const elt of maximizeWindows) {
+        elt.lastElementChild.className = "fa fa-window-maximize";
+    }
+}
+function enableFullScreenMode() {
+    alwaysFullscreen = true;
+    for (const elt of maximizeWindows) {
+        elt.lastElementChild.className = "fa fa-window-restore";
+    }
 }
 
 //设置定时循环程序
@@ -485,16 +521,18 @@ window.setInterval(() => {
     else {
         fullscreenIcon.className = "fa fa-expand";
     }
-    if (window.innerWidth < 400 || alwaysFullscreen) {
+    if (window.innerWidth < 400 || alwaysFullscreen || window.innerHeight < 500) {
         useDragging = false;
-        for (var i = 0; i < windows.length; i++) {
-            windows[i].className = "window fullscreen";
+        for (const elt of windows) {
+            elt.className = "window fullscreen";
         }
     }
     else if (!alwaysFullscreen) {
         useDragging = true;
-        for (var i = 0; i < windows.length; i++) {
-            windows[i].className = "window";
+        for (const elt of windows) {
+            elt.className = "window";
         }
     }
 }, 20);
+
+getStylesStore()
