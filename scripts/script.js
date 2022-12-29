@@ -376,7 +376,7 @@ function colorDepth(hex) {
     var r = parseInt(`${hex[0]}${hex[1]}`, 16);
     var g = parseInt(`${hex[2]}${hex[3]}`, 16);
     var b = parseInt(`${hex[4]}${hex[5]}`, 16);
-    var k = 0;
+    /*var k = 0;
     if (r < 88) {
         k++;
     }
@@ -391,6 +391,12 @@ function colorDepth(hex) {
     }
     else {
         return true;
+    }*/
+    if (r + g + b < 382) {
+        return true;
+    }
+    else {
+        return false;
     }
 }
 
