@@ -37,6 +37,10 @@ textarea {
     border-style: solid;
 }
 
+* {
+    user-select: none;
+}
+
 .select {
     display: inline-block;
     position: relative;
@@ -91,6 +95,7 @@ textarea:focus {
 }
 
 .button {
+    cursor: pointer;
     display: inline-block;
     background-color: #f5f5f5;
     padding: 1px 10px;
@@ -318,6 +323,10 @@ body {
     left: 0px !important;
 }
 
+.fullscreen .toolbar {
+    cursor: default !important;
+}
+
 .toolbar {
     font-size: 1em;
     position: absolute;
@@ -395,9 +404,10 @@ ol {
 }
 
 .style-box {
-    transition: all 0.3s;
+    cursor: pointer;
+    transition: all 0.18s;
     display: inline-table;
-    margin-bottom: 10px;
+    margin: 10px;
     width: 200px;
     height: 205.6px;
     background-color: lightgray;
@@ -436,6 +446,18 @@ ol {
 .style-box:hover {
     box-shadow: 0px 5px 0px gray;
     background-color: #ebebeb;
+    transform: scale(1.04);
+}
+
+.section {
+    position: relative;
+}
+
+.right {
+    display: inline-block;
+    position: absolute;
+    right: 10px;
+    top: 0px;
 }
 
 @media only screen and (max-width: 520px) {
