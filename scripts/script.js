@@ -1,85 +1,137 @@
 'use strict';
 
 //变量声明与赋值
-const AudioContext = window.AudioContext || window.webkitAudioContext;
+
+//AudioContext
+const AudioContext = window.AudioContext || window.webkitAudioContext; //适配较老的浏览器
 const audioContext = new AudioContext();
 
+//主元素(非根元素)
 const main = document.getElementById("main");
 
+//全屏模式方法
 const exitFullscreen = document.exitFullscreen || document.mozCancelFullScreen || document.webkitExitFullscreen;
 const fullScreen = main.requestFullscreen || main.mozRequestFullScreen || main.webkitRequestFullscreen;
 
+//播放相关元素
 const playButton = document.getElementById("play");
 const togglePlay = document.getElementById("toggleplay");
 const playIcon = document.getElementById("play-icon");
 
+//音频文件上传相关元素
 const fileElement = document.getElementById("files");
 const audioFileButton = document.getElementById("audio-file-btn");
 
+//音频源元素
 const audioElement = document.getElementById("audio");
 
+//显示或隐藏菜单的相关元素
 const ctrlMenu = document.getElementById("showmenu");
 const toggleMenu = document.getElementById("togglemenu");
 
+//进入或退出全屏模式的相关元素
 const ctrlFullscreen = document.getElementById("fullscreen");
 const fullscreenIcon = document.getElementById("fullscreen-icon");
 const toggleFullscreen = document.getElementById("togglefullscreen");
 
+//重新播放音频的相关元素
 const replay = document.getElementById("replay");
 const toggleReplay = document.getElementById("togglereplay");
 
+//各个窗口、标题栏和按钮
 const windows = document.getElementsByClassName("window");
 const showWindows = document.getElementsByClassName("showwindow");
 const closeWindows = document.getElementsByClassName("close");
 const toolbars = document.getElementsByClassName("toolbar");
 const maximizeWindows = document.getElementsByClassName("maximum");
 
-const styleSettingsWindow = document.getElementById("stylesettings");
-const styleSettingsToolbar = document.getElementById("stylesettingstoolbar");
-
+//菜单元素
 const menu = document.getElementById("menu");
 
-const reader = new FileReader();
+//FileReader
+const reader = new FileReader();      
+
+//Date
 const date = new Date();
 
+//音量增益节点
 const gain = audioContext.createGain();
 
+//音频源节点
 const track = audioContext.createMediaElementSource(audioElement);
 
+//记录第一次点击，用于双击判断
 const prevClick = { play: 0, fullscreen: 0, menu: 0, replay: 0 };
 
+//根元素(非主元素)
 const root = document.querySelector(":root");
 
+//颜色选择器元素
 const colorPickers = document.getElementsByClassName("colorpicker");
-const backgroundColorPickers = document.getElementsByClassName("bgcolorpicker");
 
+//背景颜色选择器元素
+const backgroundColorPickers = document.getElementsByClassName("bgcolorpicker");
+//背景颜色自定义选择器元素
 const backgroundColorSelecter = document.getElementById("bgcolorselect");
+//背景颜色自定义选择器关联元素
 const backgroundColorSelecterLabel = document.getElementById("bgcolorselectlabel");
+
+//背景类型选择器元素
 const staticColor = document.getElementById("static-color");
 const linearGradient = document.getElementById("linear-gradient");
 
+//渐变色相关参数选择元素
 const linearGradientTo = document.getElementById("gradient-to");
 const linearGradientFrom = document.getElementById("gradient-from");
 const linearGradientOptions = document.getElementsByClassName("linear-gradient-option");
 
+//是否启用窗口拖拽
 var useDragging = true;
 
+//是否启用强制窗口最大化
 var alwaysFullscreen = false;
 
+//获取样式配置按钮元素
 const getStylesButton = document.getElementById("getstyles");
+//高级样式编辑元素
 const styleEditor = document.getElementById("style-editor");
+//提交更改样式
 const commitButton = document.getElementById("commit");
+//下载当前样式配置
 const downloadStylesButton = document.getElementById("downloadstyles");
 
+//窗口容器
 const windowContainer = document.getElementById("windows");
 
+//音频播放进度条容器
 const progressContainer = document.getElementById("progress-container");
+//音频播放进度条
 const progressBar = document.getElementById("progress");
+//用于存储更新音频播放进度条定时事件的变量
 var progressing;
 
+//选择背景类型的元素
 const backgroundType = document.getElementsByClassName("background-type");
 
+//颜色主题容器
 const colorTheme = document.getElementById("color-theme");
+
+//刷新颜色主题的元素
+const refreshStyles = document.getElementById("refresh-styles");
+
+//默认域
+var domain;
+//默认颜色主题仓库(目录)名称
+var stylesRepoName;
+(async function () {
+    const response = await fetchText('config.json');
+    const config = JSON.parse(response);
+    //配置默认域
+    domain = config.domain;
+    //配置颜色主题仓库(目录)名称
+    stylesRepoName = config.style_repo_name;
+    getStylesStore();
+})();
 
 //绑定事件监听器
 for (const elt of backgroundColorPickers) {
@@ -203,6 +255,7 @@ progressBar.addEventListener("mousedown", stopProgress);
 progressBar.addEventListener("mouseup", startProgress);
 
 downloadStylesButton.addEventListener("click", downloadStyles);
+refreshStyles.addEventListener("click", getStylesStore);
 
 //定义相关函数功能
 
@@ -274,7 +327,7 @@ function showFirst() {
     }, 2);
 }
 
-//窗口的“全屏模式”方法
+//窗口的最大化方法
 function windowFullscreen() {
     if (!alwaysFullscreen) {
         enableFullScreenMode();
@@ -376,22 +429,6 @@ function colorDepth(hex) {
     var r = parseInt(`${hex[0]}${hex[1]}`, 16);
     var g = parseInt(`${hex[2]}${hex[3]}`, 16);
     var b = parseInt(`${hex[4]}${hex[5]}`, 16);
-    /*var k = 0;
-    if (r < 88) {
-        k++;
-    }
-    if (g < 88) {
-        k++;
-    }
-    if (b < 88) {
-        k++;
-    }
-    if (k < 2) {
-        return false;
-    }
-    else {
-        return true;
-    }*/
     if (r + g + b < 382) {
         return true;
     }
@@ -434,8 +471,9 @@ function dblclick(fn, key) {
     }
 }
 
+//颜色选择器选择颜色
 function selectorColor(fn) {
-    return function () {
+    return function() {
         this.parentElement.dataset.color = this.value;
         this.parentElement.style.backgroundColor = this.value;
         if (colorDepth(this.value)) {
@@ -448,6 +486,7 @@ function selectorColor(fn) {
     }
 }
 
+//选择背景类型
 function chooseBackground() {
     document.getElementById(this.dataset.open).className = "selector";
     document.getElementById(this.dataset.close).className = "selector disabled";
@@ -460,12 +499,14 @@ function chooseBackground() {
     }
 }
 
+//清除或设置某个根元素的样式属性
 function clearProperty(property_name) {
     root.style.setProperty(property_name, "none");
 }
 function setProperty(property_name, value) {
     root.style.setProperty(property_name, value);
 }
+
 
 function selectLinearGradientDirection() {
     const selected = this;
@@ -474,6 +515,7 @@ function selectLinearGradientDirection() {
     linearGradientTo.innerText = selected.dataset.to;
 }
 
+//设置选择
 function setSelection(selected,elements,selected_className,unselected_className) {
     for (const elt of elements) {
         elt.className = unselected_className;
@@ -481,31 +523,79 @@ function setSelection(selected,elements,selected_className,unselected_className)
     selected.className += ` ${selected_className}`;
 }
 
+//获取样式库
 async function getStylesStore() {
-    var filelist = await fetchText("https://cdn.jsdelivr.net/gh/User782Tec/audio-player-styles-repo@main/list.txt");
+    if ((!domain) || (!stylesRepoName)) {
+        console.error("Load failed")
+        return false;
+    }
+    colorTheme.innerHTML = "";
+    var filelist = await fetchText(`${domain}/${stylesRepoName}//list.txt`);
     filelist = filelist.split("\n");
     for (const file of filelist) {
         if (file != "") {
-            var meta = await fetchText(`https://cdn.jsdelivr.net/gh/User782Tec/audio-player-styles-repo@main/${file}/meta.json`);
-            meta = JSON.parse(meta);
-            var style = await fetchText(`https://cdn.jsdelivr.net/gh/User782Tec/audio-player-styles-repo@main/${file}/${meta.styles}`);
-            var element = document.createElement("div");
-            element.dataset.style = style;
-            element.innerHTML = `${meta.name} 作者：${meta.authors}`;
-            colorTheme.appendChild(element);
-            element.addEventListener("click",function(){
-                root.setAttribute("style", this.dataset.style);
-            });
+            generate(file);
         }
     }
 }
 
+//获取网页文本
 async function fetchText(url) {
-    var response = await fetch(url);
-    var text = await response.text();
+    const response = await fetch(url);
+    const text = await response.text();
     return text;
 }
 
+
+//获取网页文件并将其本地化
+async function fetchFile(url) {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    const result = URL.createObjectURL(blob);
+    return result;
+}
+
+//获取样式元数据
+async function generate(file) {
+    var meta = await fetchText(`${domain}/${stylesRepoName}//${file}/meta.json`);
+    meta = JSON.parse(meta);
+    generateStyleBox(file, meta);
+}
+
+//生成样式介绍栏
+async function generateStyleBox(file, meta) {
+    const element_image = document.createElement("div");
+    const element_details = document.createElement("div");
+    const element_title = document.createElement("div");
+    const element_description = document.createElement("div");
+    const element = document.createElement("div");
+    generateStyleImage(file, meta, element_image, element);
+    const style = await fetchText(`${domain}/${stylesRepoName}//${file}/${meta.styles}`);
+    element.className = "style-box";
+    element.dataset.style = style;
+    element_details.className = "style-details";
+    element_details.innerText = meta.description;
+    element_title.className = "style-title";
+    element_title.innerText = meta.name;
+    element_description.className = "style-description";
+    element_description.appendChild(element_title);
+    element_description.appendChild(element_details);
+    element.appendChild(element_description);
+    colorTheme.appendChild(element);
+    element.addEventListener("click",function(){
+        root.setAttribute("style", this.dataset.style);
+    });
+}
+
+//获取样式介绍图片
+async function generateStyleImage(file, meta, element_image, element) {
+    const image = await fetchFile(`${domain}/${stylesRepoName}//${file}/${meta.image}`);
+    element_image.className = "style-image";
+    element_image.style.backgroundImage = `url(${image})`;
+    element.insertBefore(element_image, element.firstElementChild);
+}
+
+//禁用或启用窗口最大化
 function disableFullScreenMode() {
     alwaysFullscreen = false;
     for (const elt of maximizeWindows) {
@@ -540,5 +630,3 @@ window.setInterval(() => {
         }
     }
 }, 20);
-
-getStylesStore();
