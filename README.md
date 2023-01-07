@@ -32,6 +32,12 @@ GitHub上构建的Pages：<https://user782tec.github.io/audio-player/>
 
 Cloudflare上构建的Pages：<https://audio-player.pages.dev/>
 
+### 浏览器兼容性(不完整)
+
+* FireFox与Safari(几乎完全兼容)
+* Chrome与Opera(略有一些问题)
+* Internet Explorer(几乎完全不支持)
+
 ### 主要功能
 
 将文件上传至网页后，用户可以控制相关的配置，并在线播放音频。
@@ -51,6 +57,7 @@ Cloudflare上构建的Pages：<https://audio-player.pages.dev/>
 * 新增了“下拉菜单”控件。
 * 新增了部分颜色主题商店的脚本功能。
 * 新增了应用图标和Web App（实验性功能）。
+* 为部分图标新增悬浮提示。
 
 #### 更改
 
@@ -73,6 +80,11 @@ Cloudflare上构建的Pages：<https://audio-player.pages.dev/>
 * 在可交互的元素上悬浮鼠标时，鼠标会变成`pointer`样式。
 * 修改了颜色深浅判断的方法。
 * 继续更改了响应式设计。
+* 重写了自定义样式的格式与获取、提交更改的方法。
+
+#### 优化
+
+* 针对鼠标优化了窗口的拖动方法。
 
 #### 修复
 
@@ -80,10 +92,13 @@ Cloudflare上构建的Pages：<https://audio-player.pages.dev/>
 * 修复了部分情况下窗口最大化按钮更新不及时的问题。
 * 修复了下拉菜单有时被其他元素遮挡的问题。
 * 修复了背景色选择时无法覆盖背景图的问题。
+* 修复了在部分浏览器上无法获取高级样式的问题。
+* 修复了部分情况下窗口会超出页面的问题。
 
 #### 已移除
 
 * 移除了菜单上的外观按钮。
+* 移除了拖动窗口时光标的变化。
 
 ### 0.4.1 - 2022.12.17
 

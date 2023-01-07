@@ -30,7 +30,7 @@ textarea {
     width: calc(100% - 20px);
     height: 200px;
     border-radius: 2px;
-    font-family: "consolas" monospace;
+    font-family: consolas monospace;
     font-size: 14px;
     transition: all 0.3s;
     resize: none;
@@ -274,13 +274,13 @@ body {
     height: 300px;
 }
 
-#stylesettings,#settings,#store {
+.window {
     width: 500px;
     height: 400px;
 }
 
 .window {
-    position: absolute;
+    position: fixed;
     background-image: var(--window-bgimg);
     background-size: var(--window-bgsize);
     background-color: var(--window-bgcolor);
@@ -310,6 +310,8 @@ body {
 }
 
 .selector {
+    margin-top: 5px;
+    font-size: 12px;
     margin-left: 10px;
 }
 
@@ -328,6 +330,7 @@ body {
 }
 
 .toolbar {
+    /* cursor: grab; */
     font-size: 1em;
     position: absolute;
     padding: 3px 5px 5px 5px;
@@ -390,6 +393,13 @@ body {
     font-weight: bold;
 }
 
+.subtitle {
+    color: #222222;
+    font-size: 14px;
+    line-height: 16px !important;
+    display: block;
+}
+
 ol {
     font-size: 0.8em;
 }
@@ -409,7 +419,7 @@ ol {
     display: inline-table;
     margin: 10px;
     width: 200px;
-    height: 205.6px;
+    height: 223.6px;
     background-color: lightgray;
     border-radius: 8px;
 }
@@ -439,8 +449,16 @@ ol {
 }
 
 .style-title {
+    word-break: break-all;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    line-clamp: 2;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
     font-weight: bold;
     font-size: 24px;
+    line-height: 26px;
 }
 
 .style-box:hover {
@@ -482,23 +500,9 @@ ol {
         left: calc((100% - 26% - 2px) / 2)
     }
 
-    .window {
-        padding: 3px;
-    }
-
-    .toolbar {
-        font-size: 0.8em;
-        height: 1.3em;
-    }
-
-    .toolbar-btn {
-        font-size: 0.9em;
-        right: 7px;
-    }
-
     #about {
-        width: 150px;
-        height: 100px;
+        width: 200px;
+        height: 150pxj;
     }
 
     #help {
@@ -506,7 +510,7 @@ ol {
         height: 200px;
     }
 
-    #stylesettings,#settings,#store {
+    .window {
         width: 300px;
         height: 300px;
     }

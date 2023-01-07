@@ -26,21 +26,21 @@
         <div class="container" id="menu">
             <!--菜单按钮-->
             <div class="left-entry">
-                <div id="showmenu" class="icon-btn"><i class="fa fa-close"></i></div>
-                <div data-playing="false" id="play" class="icon-btn"><i class="fa fa-play" id="play-icon"></i></div>
-                <div id="fullscreen" class="icon-btn"><i class="fa fa-expand" id="fullscreen-icon"></i></div>
-                <div id="replay" class="icon-btn"><i class="fa fa-refresh"></i></div>
+                <div id="showmenu" class="icon-btn" title="关闭菜单"><i class="fa fa-close"></i></div>
+                <div data-playing="false" id="play" class="icon-btn" title="播放/暂停"><i class="fa fa-play" id="play-icon"></i></div>
+                <div id="fullscreen" class="icon-btn" title="全屏模式"><i class="fa fa-expand" id="fullscreen-icon"></i></div>
+                <div id="replay" class="icon-btn" title="重新播放"><i class="fa fa-refresh"></i></div>
             </div>
             <div class="center-entry">
                 <label class="file-btn" id="audio-file-btn" for="files">上传文件</label>
                 <input type="file" id="files">
             </div>
             <div class="right-entry">
-                <div class="showwindow icon-btn" data-window="store"><i class="fa fa-archive"></i></div>
-                <div class="showwindow icon-btn" data-window="about"><i class="fa fa-info"></i></div>
-                <div class="showwindow icon-btn" data-window="help"><i class="fa fa-question"></i></div>
+                <div class="showwindow icon-btn" data-window="store" title="商店"><i class="fa fa-archive"></i></div>
+                <div class="showwindow icon-btn" data-window="about" title="关于"><i class="fa fa-info"></i></div>
+                <div class="showwindow icon-btn" data-window="help" title="帮助"><i class="fa fa-question"></i></div>
                 <!--<div class="showwindow inline" data-window="stylesettings">外观</div>-->
-                <div class="showwindow icon-btn" data-window="settings"><i class="fa fa-cog"></i></div>
+                <div class="showwindow icon-btn" data-window="settings" title="设置中心"><i class="fa fa-cog"></i></div>
             </div>
             <div id="progress-container" class="hide">
                 <input type="range" id="progress" min="0" disabled="disabled" value="0">
@@ -84,7 +84,7 @@
                         </div>
                         <div class="large">使用方法</div>
                         <ol>
-                            <li>通过“上传文件按钮上传自己的音频文件;</li>
+                            <li>通过“上传文件”按钮上传自己的音频文件;</li>
                             <li>点击<i class="fa fa-play"></i>按钮播放。</li>
                         </ol>
                     </div>
@@ -105,8 +105,8 @@
                         作者: User782Tec<br />
                         仓库地址: <a href="https://github.com/User782Tec/audio-player"
                             target="_blank">User782Tec/audio-player</a><br />
-                        当前版本: 0.4.2beta8<br />
-                        最后更新日期: 2023.1.2
+                        当前版本: 0.4.2beta9<br />
+                        最后更新日期: 2023.1.7
                     </div>
                 </div>
             </div>
@@ -157,11 +157,12 @@
                             </div>
                         </div>
                         <div id="addcolor" class="button"><i class="fa fa-plus"></i> 添加颜色</div>
+                        <div id="linear-gradient-colors"></div>
                     </div>
                     <div class="window-title large">高级样式</div>
                     修改样式(开发者)
                     <div>
-                        <textarea id="style-editor"></textarea>
+                        <textarea id="style-editor" spellcheck="false"></textarea>
                     </div>
                     <div>
                         <div class="button" id="commit">更新</div>
