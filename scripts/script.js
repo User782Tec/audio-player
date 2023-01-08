@@ -598,6 +598,17 @@ function setSelection(selected,elements,selected_className,unselected_className)
     selected.className += ` ${selected_className}`;
 }
 
+// 生成元素
+function generateElement(type, innerText, className, data=null, dataset=null) {
+    const element = document.createElement(type);
+    element.innerText = innerText;
+    element.className = className;
+    if (data && dataset) {
+        element.dataset[dataset] = data;
+    }
+    return element;
+}
+
 // 获取网页文本
 async function fetchText(url) {
     const response = await fetch(url);
@@ -650,27 +661,18 @@ async function getStylesStore() {
 
 // 生成样式介绍栏
 async function generateStyleBox(file, meta) {
-    // 创建元素
     const element_image = document.createElement("div");
-    const element_details = document.createElement("div");
-    const element_title = document.createElement("div");
-    const element_description = document.createElement("div");
-    const element_authors = document.createElement("div");
     // 父元素
-    const element = document.createElement("div");
+    const element = generateElement("div", "", "style-box");
     // 异步获取图像
     generateStyleImage(file, meta, element_image, element);
-    // 获取样式
+    // 获取样式, 创建元素
     const style = await fetchText(`${domain}/${stylesRepoName}/${file}/${meta.styles}`);
-    element.className = "style-box";
     element.dataset.style = style;
-    element_details.className = "style-details";
-    element_details.innerText = meta.description;
-    element_title.className = "style-title";
-    element_title.innerText = meta.name;
-    element_authors.className = "subtitle";
-    element_authors.innerText = `作者: ${meta.authors}`;
-    element_description.className = "style-description";
+    const element_details = generateElement("div", meta.description, "style-details");
+    const element_title = generateElement("div", meta.name, "style-title");
+    const element_authors = generateElement("div", `作者: ${meta.authors}`, "subtitle");
+    const element_description = generateElement("div", "", "style-description");
     element_title.appendChild(element_authors);
     element_description.appendChild(element_title);
     element_description.appendChild(element_details);
