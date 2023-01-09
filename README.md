@@ -32,6 +32,8 @@ GitHub上构建的Pages：<https://user782tec.github.io/audio-player/>
 
 Cloudflare上构建的Pages：<https://audio-player.pages.dev/>
 
+~~ 不用下载，点击就玩 ~~
+
 ### 浏览器兼容性(不完整)
 
 * FireFox与Safari(几乎完全兼容)
