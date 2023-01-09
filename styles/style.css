@@ -79,6 +79,7 @@ textarea {
 
 .option {
     padding-left: 5px;
+    line-height: 1.4em;
 }
 
 .option:not(.option-selected):hover {
@@ -102,6 +103,10 @@ textarea:focus {
     border: 1px #565656 solid;
     font-size: 0.8em !important;
     margin-right: 10px;
+}
+
+.button * {
+    vertical-align: baseline !important;
 }
 
 html {
@@ -148,6 +153,7 @@ input[type=radio] {
 
 .ellipsis {
     margin-left: 1px;
+    vertical-align: baseline !important;
 }
 
 .hide {
@@ -292,12 +298,13 @@ body {
     border-color: var(--window-border-color);
 }
 
-.bgcolorpicker {
+.colorpicker {
     display: inline-block;
     width: 1em;
     height: 1em;
     border-radius: 5px;
-    margin-right: 3px;
+    margin-right: 6px;
+    margin-top: 2px;
     color: #dddddd;
     /*transition: box-shadow 0.6s;*/
 }
@@ -313,6 +320,10 @@ body {
     margin-top: 5px;
     font-size: 12px;
     margin-left: 10px;
+}
+
+.selector * {
+    vertical-align: top;
 }
 
 /*.bgcolorpicker:hover {

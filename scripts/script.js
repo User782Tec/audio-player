@@ -72,9 +72,7 @@ const colorPickers = document.getElementsByClassName("colorpicker");
 // 背景颜色选择器元素
 const backgroundColorPickers = document.getElementsByClassName("bgcolorpicker");
 // 背景颜色自定义选择器元素
-const backgroundColorSelecter = document.getElementById("bgcolorselect");
-// 背景颜色自定义选择器关联元素
-const backgroundColorSelecterLabel = document.getElementById("bgcolorselectlabel");
+const backgroundColorSelector = document.getElementById("bgcolorselect");
 
 // 背景类型选择器元素
 const staticColor = document.getElementById("static-color");
@@ -85,6 +83,7 @@ const linearGradientTo = document.getElementById("gradient-to");
 const linearGradientFrom = document.getElementById("gradient-from");
 const linearGradientOptions = document.getElementsByClassName("linear-gradient-option");
 const linearGradientColors = document.getElementById("linear-gradient-colors");
+let LinearGradientDirection = "top";
 // 为渐变色添加颜色的按钮元素
 const linearGradientAddColor = document.getElementById("addcolor");
 
@@ -158,17 +157,7 @@ var stylesConfig;
 
 // 绑定事件监听器
 for (const elt of backgroundColorPickers) {
-    elt.addEventListener("click", function () {
-        // 选中该元素
-        setSelection(this, backgroundColorPickers, "selected", "bgcolorpicker");
-        // 设置样式
-        root.style.setProperty("--main-bgcolor", this.dataset.color);
-        // 保存数值
-        staticColor.dataset.color = this.dataset.color;
-        // 清除冲突样式
-        clearProperty("--main-bgimg");
-        // main.style.backgroundColor = this.dataset.color;
-    });
+    elt.addEventListener("click", setBackgroundColor);
 }
 
 setPickerColor();
@@ -213,10 +202,7 @@ for (const elt of linearGradientOptions) {
 }
 
 // 绑定自定义背景色选择器数值变动时的设置颜色时间
-backgroundColorSelecter.addEventListener("change", selectorColor(function () {
-    root.style.setProperty("--main-bgcolor", backgroundColorSelecter.value);
-    staticColor.dataset.color = backgroundColorSelecter.value;
-}));
+backgroundColorSelector.addEventListener("change", selectorColor);
 
 // 绑定结束拖动窗口时事件
 window.addEventListener("touchend", finishDragging);
@@ -283,6 +269,8 @@ commitButton.addEventListener("click", () => {
     parseStyles(styleEditor.value);
 });
 
+linearGradientAddColor.addEventListener("click", addColor);
+
 // 绑定音频播放进度条的开始与暂停事件
 progressBar.addEventListener("touchstart", stopProgress);
 progressBar.addEventListener("touchend", startProgress);
@@ -295,6 +283,32 @@ downloadStylesButton.addEventListener("click", downloadStyles);
 refreshStyles.addEventListener("click", getStylesStore);
 
 // 定义相关函数功能
+
+// 设置背景色
+function setBackgroundColor() {
+    // 选中该元素
+    setSelection(this, backgroundColorPickers, "selected", "bgcolorpicker colorpicker");
+    // 设置样式
+    root.style.setProperty("--main-bgcolor", this.dataset.color);
+    // 保存数值
+    staticColor.dataset.color = this.dataset.color;
+    // 清除冲突样式
+    clearProperty("--main-bgimg");
+    // main.style.backgroundColor = this.dataset.color;
+}
+
+// 设置渐变色
+function setLinearGradientColor() {
+    // 选中该元素
+    setSelection(this, this.parentElement.childNodes, "selected", "lineargradientpicker colorpicker");
+    // 保存数值
+    this.parentElement.parentElement.dataset.color = this.dataset.color;
+    // 设置样式
+    setLinearGradient();
+    // 清除冲突样式
+    clearProperty("--main-bgcolor");
+    // main.style.backgroundColor = this.dataset.color;
+}
 
 // 显示或隐藏菜单
 function showmenu() {
@@ -547,9 +561,22 @@ function dblclick(fn, key) {
 }
 
 // 颜色选择器选择颜色
-function selectorColor(fn) {
-    return function() {
+function selectorColor() {
+    this.parentElement.dataset.color = this.value;
+    this.parentElement.style.backgroundColor = this.value;
+    if (colorDepth(this.value)) {
+        this.parentElement.style.color = "#dddddd";
+    }
+    else {
+        this.parentElement.style.color = "#222222";
+    }
+    root.style.setProperty("--main-bgcolor", backgroundColorSelector.value);
+    staticColor.dataset.color = backgroundColorSelector.value;
+}
+function linearGradientSelectorColor() {
+    if (this.value) {
         this.parentElement.dataset.color = this.value;
+        this.parentElement.parentElement.parentElement.dataset.color = this.value;
         this.parentElement.style.backgroundColor = this.value;
         if (colorDepth(this.value)) {
             this.parentElement.style.color = "#dddddd";
@@ -557,7 +584,11 @@ function selectorColor(fn) {
         else {
             this.parentElement.style.color = "#222222";
         }
-        fn();
+        setLinearGradient.call(this);
+        setLinearGradientColor.call(this.parentElement);
+    }
+    else {
+        setLinearGradientColor.call(this);
     }
 }
 
@@ -571,6 +602,7 @@ function chooseBackground() {
     }
     else if (this.dataset.open === "linear-gradient") {
         setProperty("--main-bgcolor", "white");
+        setLinearGradient();
     }
 }
 
@@ -588,6 +620,8 @@ function selectLinearGradientDirection() {
     setSelection(selected,linearGradientOptions,"option-selected","option linear-gradient-option");
     linearGradientFrom.innerText = selected.dataset.from;
     linearGradientTo.innerText = selected.dataset.to;
+    LinearGradientDirection = this.dataset.value;
+    setLinearGradient();
 }
 
 // 设置选择
@@ -598,10 +632,60 @@ function setSelection(selected,elements,selected_className,unselected_className)
     selected.className += ` ${selected_className}`;
 }
 
+// 添加渐变色
+function addColor() {
+    const element = generateElement("div", "", "selector", "white", "color");
+    const selector_element = generateElement("div", "", "inline");
+    const delete_icon = generateElement("i", "", "fa fa-trash");
+    const delete_element = generateElement("div", "", "button");
+    delete_element.appendChild(delete_icon);
+    delete_element.innerHTML += " 删除颜色";
+    element.appendChild(delete_element);
+    delete_element.addEventListener("click", function(){
+        linearGradientColors.removeChild(this.parentElement);
+        setLinearGradient();
+    })
+    for (const value of colorList) {
+        var colorpicker;
+        if (value != "white") {
+            colorpicker = generateElement("div", "", "colorpicker lineargradientpicker", value, "color");
+        }
+        else if (value == "white") {
+            colorpicker = generateElement("div", "", "colorpicker lineargradientpicker selected", value, "color");
+        }
+        selector_element.appendChild(colorpicker);
+        colorpicker.addEventListener("click", setLinearGradientColor);
+    }
+    const colorselector = generateElement("label", "", "lineargradientpicker colorpicker colorselector", "black", "color");
+    const color = document.createElement("input");
+    const ellipsis = generateElement("i", "", "fa fa-ellipsis-h ellipsis")
+    color.type = "color";
+    colorselector.appendChild(ellipsis);
+    colorselector.appendChild(color);
+    selector_element.appendChild(colorselector);
+    element.appendChild(selector_element);
+    linearGradientColors.appendChild(element);
+    color.addEventListener("change", linearGradientSelectorColor);
+    color.addEventListener("change", linearGradientSelectorColor);
+    colorselector.addEventListener("click", linearGradientSelectorColor);
+    setPickerColor();
+    setLinearGradient();
+}
+
+function setLinearGradient() {
+    const colors = linearGradientColors.childNodes;
+    var result = "";
+    for (const value of colors) {
+        result += `${value.dataset.color}, `;
+    }
+    result = `linear-gradient(to ${LinearGradientDirection}, ${result})`.replace(", )", ")");
+    root.style.setProperty("--main-bgimg", result);
+}
+
 // 生成元素
-function generateElement(type, innerText, className, data=null, dataset=null) {
+function generateElement(type, inner, className, data=null, dataset=null, textType="innerText") {
     const element = document.createElement(type);
-    element.innerText = innerText;
+    element[textType] = inner;
     element.className = className;
     if (data && dataset) {
         element.dataset[dataset] = data;
