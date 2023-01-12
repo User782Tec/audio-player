@@ -1,3 +1,8 @@
 input[type=file] {
     opacity: 0;
 }
+label {
+    background-color: skyblue;
+    display: inline-block;
+    width: 25%;
+}
