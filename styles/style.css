@@ -152,8 +152,9 @@ input[type=radio] {
 }
 
 .ellipsis {
+    font-size: 12px;
     margin-left: 1px;
-    vertical-align: baseline !important;
+    vertical-align: middle !important;
 }
 
 .hide {
@@ -317,13 +318,14 @@ body {
 }
 
 .selector {
-    margin-top: 5px;
     font-size: 12px;
     margin-left: 10px;
+    margin-top: 2px;
+    margin-bottom: 2px;
 }
 
 .selector * {
-    vertical-align: top;
+    vertical-align: top !important;
 }
 
 /*.bgcolorpicker:hover {

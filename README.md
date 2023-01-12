@@ -36,8 +36,8 @@ Cloudflare上构建的Pages：<https://audio-player.pages.dev/>
 
 ### 浏览器兼容性(不完整)
 
-* FireFox与Safari(几乎完全兼容)
-* Chrome与Opera(略有一些问题)
+* Google Chrome,Opera,Safari和Microsoft Edge(几乎完全兼容)
+* Mozilla FireFox与Safari(略有一些问题)
 * Internet Explorer(几乎完全不支持)
 
 ### 主要功能
@@ -83,6 +83,7 @@ Cloudflare上构建的Pages：<https://audio-player.pages.dev/>
 * 修改了颜色深浅判断的方法。
 * 继续更改了响应式设计。
 * 重写了自定义样式的格式与获取、提交更改的方法。
+* 重构代码
 
 #### 优化
 
