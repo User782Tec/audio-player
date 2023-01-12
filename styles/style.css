@@ -38,7 +38,6 @@ textarea {
 }
 
 .select {
-    z-index: 1;
     display: inline-block;
     position: relative;
     border-radius: 0px;
@@ -98,19 +97,6 @@ textarea:focus {
     border: 1px #565656 solid;
     font-size: 0.8em !important;
     margin-right: 10px;
-}
-
-.buttons {
-    display: inline-block;
-}
-
-.right {
-    position: absolute;
-    right: 4px;
-}
-
-.section {
-    position: relative;
 }
 
 html {
@@ -177,14 +163,14 @@ label {
     display: inline-block;
 }
 
-label.file-btn {
+.file-btn {
     cursor: pointer;
     position: absolute;
+    top: 10px;
     background-color: var(--audio-fileupload-bgcolor);
     text-align: center;
     padding: 0.15em;
     width: 30%;
-    top: 7px;
     left: calc((100% - 30% - 0.3em) / 2);
 }
 
@@ -198,6 +184,7 @@ body {
 }
 
 .container {
+    display: block;
     background-color: var(--menu-bgcolor);
     position: absolute;
     display: block;
@@ -288,7 +275,6 @@ body {
 }
 
 .window {
-    z-index: 2;
     position: absolute;
     background-image: var(--window-bgimg);
     background-size: var(--window-bgsize);
@@ -408,25 +394,70 @@ ol {
     margin-bottom: 10px;
 }
 
-@media only screen and (max-width: 400px) {
+.style-box {
+    transition: all 0.3s;
+    display: inline-table;
+    margin-bottom: 10px;
+    width: 200px;
+    height: 205.6px;
+    background-color: lightgray;
+    border-radius: 8px;
+}
+
+.style-image {
+    border-radius: 8px;
+    width: 100%;
+    height: 120px;
+    background-size: 100% auto;
+    background-repeat: no-repeat;
+}
+
+.style-description {
+    padding: 10px;
+}
+
+.style-details {
+    word-break: break-all;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    line-clamp: 2;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 20.8px;
+    font-size: 16px;
+}
+
+.style-title {
+    font-weight: bold;
+    font-size: 24px;
+}
+
+.style-box:hover {
+    box-shadow: 0px 5px 0px gray;
+    background-color: #ebebeb;
+}
+
+@media only screen and (max-width: 520px) {
     .container {
-        width: 90%;
-        font-size: 0.8em;
+        width: 95%;
+        font-size: 0.75em;
         padding: 5px;
-        left: calc((100% - 90% - 10px) / 2);
+        left: calc((100% - 95% - 10px) / 2);
     }
 
-    .container.icon-btn {
+    .icon-btn {
         width: 1em;
         padding: 0px;
+        margin-right: 5px;
     }
 
-    label.file-btn {
-        top: 3px;
-        width: 23%;
+    .file-btn {
+        top: 6px;
+        width: 26%;
         padding-left: 1px;
         padding-right: 1px;
-        left: calc((100% - 23% - 2px) / 2)
+        left: calc((100% - 26% - 2px) / 2)
     }
 
     .window {
@@ -453,13 +484,13 @@ ol {
         height: 200px;
     }
 
-    #stylesettings,#settings {
+    #stylesettings,#settings,#store {
         width: 300px;
-        height: 200px;
+        height: 300px;
     }
 }
 
-@media only screen and (min-width: 400px) and (max-width: 600px) {
+@media only screen and (min-width: 520px) and (max-width: 700px) {
     .container {
         width: 85%;
         left: calc((100% - 85% - 20px) / 2);
@@ -468,6 +499,26 @@ ol {
     .container.icon-btn {
         font-size: 1em;
         width: 1em;
-        margin-right: 4px;
+        margin-right: 5px;
+    }
+}
+
+@media only screen and (max-width: 370px) {
+    .icon-btn {
+        width: 0.85em;
+        padding: 0px;
+        margin-right: 1px;
+    }
+}
+
+@media only screen and (max-width: 400px) {
+    .maximum {
+        display: none;
+    }
+}
+
+@media only screen and (max-height: 500px) {
+    .maximum {
+        display: none;
     }
 }

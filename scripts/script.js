@@ -541,4 +541,4 @@ window.setInterval(() => {
     }
 }, 20);
 
-getStylesStore()
+getStylesStore();
