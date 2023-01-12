@@ -5,11 +5,19 @@
         <link rel="stylesheet" type="text/css" href="style.css">
     </head>
     <body>
-        <label for="files">上传文件</label>
-        <input type="file" onchange="pushAudio()" accept="audio/*" id="files">
+        <div class="container">
+            <label for="files">上传文件</label>
+            <input type="file" onchange="pushAudio(this)" accept="audio/*" id="files">
+            <audio id="audio"></audio>
+            <button data-playing="false" onclick="togglePlay()">播放/暂停</button>
+        </div>
         <script>
             const AudioContext = window.AudioContext || window.webkitAudioContext;
             const audioContext = new AudioContext();
+            function pushAudio(obj) {
+                document.getElementById("audio").src = obj.files[0];
+                var track = audioContext.createMediaElementSource(document.getElementById("audio"));
+            }
         </script>
     </body>
 </html>
