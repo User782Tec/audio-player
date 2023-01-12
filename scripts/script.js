@@ -121,40 +121,16 @@ function showmenu() {
 
 function fullscreen() {
     if (document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement) {
-        /*if (document.exitFullscreen) {
-            document.exitFullscreen();
-        }
-        else if (document.mozCancelFullScreen) {
-            document.mozCancelFullScreen();
-        }
-        else if (document.webkitExitFullscreen) {
-            document.webkitExitFullscreen();
-        }
-        else {
-            alert("当前浏览器不支持全屏显示，请切换浏览器再打开");
-        }*/
         if (exitFullscreen) {
-            exitFullscreen();
+            exitFullscreen.call(document);
         }
         else {
             alert("当前浏览器不支持全屏显示，请切换浏览器再打开");
         }
     }
     else {
-        /*if (document.createElement("div").requestFullscreen) {
-            document.getElementById("main").requestFullscreen();
-        }
-        else if (document.createElement("div").mozRequestFullScreen) {
-            document.getElementById("main").mozRequestFullScreen();
-        }
-        else if (document.createElement("div").webkitRequestFullscreen) {
-            document.getElementById("main").webkitRequestFullscreen();
-        }
-        else {
-            alert("当前浏览器不支持全屏显示，请切换浏览器再打开");
-        }*/
         if (fullScreen) {
-            fullScreen();
+            fullScreen.call(document.getElementById("main"));
         }
         else {
             alert("当前浏览器不支持全屏显示，请切换浏览器再打开");
