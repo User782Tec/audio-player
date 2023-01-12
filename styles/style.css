@@ -1,7 +1,18 @@
+/*@keyframes turnred {
+    from {
+        background-color: white;
+    }
+    to {
+        background-color: red;
+    }
+}*/
 input[type=file] {
     display: none;
     /*opacity: 0;*/
     position: absolute;
+}
+iframe {
+    border: none;
 }
 label {
     display: inline-block;
@@ -66,4 +77,53 @@ label.icon-btn {
 #main:-webkit-full-screen {
     width: 100%;
     height: 100%;
+}
+#about {
+    width: 200px;
+    height: 150px;
+}
+#about iframe {
+    width: 195px;
+    height: 125px;
+}
+.window {
+    position: absolute;
+    background-color: white;
+    padding: 10px;
+    display: none;
+    box-shadow: 0px 0px 7.5px gray;
+}
+.toolbar {
+    font-size: 0.6em;
+    position: absolute;
+    padding: 5px;
+    left: 0px;
+    top: 0px;
+    height: 3em;
+    width: 100%;
+}
+.toolbar-btn {
+    font-size: 0.6em;
+    position: absolute;
+    right: 15px;
+    height: 2.2em;
+    width: 20px;
+    text-align: center;
+    margin-top: 1.5px;
+}
+.close:hover {
+    /*animation-name: turnred;
+    animation-duration: 1;*/
+    background-color: red;
+    color: white;
+}
+@media only screen and (max-width: 600px) {
+    .container {
+        width: 350px;
+        font-size: 0.8em;
+    }
+    label.file-btn {
+        width: 100px;
+        left: calc(50% - 50px);
+    }
 }

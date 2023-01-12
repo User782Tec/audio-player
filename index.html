@@ -14,12 +14,20 @@
                 <label id="showmenu" class="icon-btn"><i class="fa fa-close"></i></label>
                 <label data-playing="false" id="play" class="icon-btn"><i class="fa fa-play" id="play-icon"></i></label>
                 <label id="fullscreen" class="icon-btn"><i class="fa fa-expand" id="fullscreen-icon"></i></label>
-                <label id="again" class="icon-btn"><i class="fa fa-refresh"></i></label>
+                <label id="again" class="icon-btn"><i class="fa fa-refresh"></i></label><br /><br />
+                <!--
+                    <label>当前版本:0.2.0b3 , 仓库地址:<a href="https://github.com/User782Tec/audio-player">https://github.com/User782Tec/audio-player</a> , 作者:User782Tec </label>
+                -->
+                <label id="showabout" class="icon-btn"><i class="fa fa-info"></i></label>
             </dialog>
             <div class="control left-top" id="togglemenu" data-menushow="true"></div>
             <div class="control right-top" id="togglefullscreen"></div>
             <div class="control left-bottom" id="toggleplay"></div>
             <div class="control right-bottom" id="togglerepeat"></div>
+            <div class="window" id="about">
+                <div class="toolbar" id="abouttoolbar">关于 <label class="toolbar-btn close" id="closeabout"><i class="fa fa-close"></i></label></div><br />
+                <iframe src="docs/about.html"></iframe>               
+            </div>
         </div>
         <script src="scripts/script.js"></script>
     </body>
