@@ -1,6 +1,7 @@
 <html>
     <head>
         <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, maximum-scale=1.0, user-scalable=no">
         <title>Web Audio Player</title>
         <link rel="stylesheet" type="text/css" href="styles/style.css">
         <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css"> <!--Font awesome图标库-->
@@ -16,18 +17,19 @@
                 <label id="fullscreen" class="icon-btn"><i class="fa fa-expand" id="fullscreen-icon"></i></label>
                 <label id="again" class="icon-btn"><i class="fa fa-refresh"></i></label><br /><br />
                 <label id="showabout" class="icon-btn"><i class="fa fa-info"></i></label>
+                <label id="showhelp" class="icon-btn"><i class="fa fa-question"></i></label>
             </dialog>
             <div class="control left-top" id="togglemenu" data-menushow="true"></div>
             <div class="control right-top" id="togglefullscreen"></div>
             <div class="control left-bottom" id="toggleplay"></div>
             <div class="control right-bottom" id="togglerepeat"></div>
+            <div class="window" id="help">
+                <div class="toolbar" id="helptoolbar">帮助 <label class="toolbar-btn close" id="closehelp"><i class="fa fa-close"></i></label></div><br />
+                <iframe src="docs/help.html"></iframe>
+            </div>
             <div class="window" id="about">
                 <div class="toolbar" id="abouttoolbar">关于 <label class="toolbar-btn close" id="closeabout"><i class="fa fa-close"></i></label></div><br />
                 <iframe src="docs/about.html"></iframe>               
-            </div>
-            <div class="window" id="help">
-                <div class="toolbar" id="helptoolbar">帮助 <label class="toolbar-btn close" id="closehelp"><i class="fa fa-close"></i></label></div><br />
-                <iframe src="docs/help"></iframe>
             </div>
         </div>
         <script src="scripts/script.js"></script>
