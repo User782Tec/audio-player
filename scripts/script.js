@@ -54,7 +54,9 @@ var isHelpDragging = false;
 var prevClick = {play: 0, fullscreen: 0, menu: 0, repeat: 0};
 
 var aboutLeft;
+var aboutTop;
 var helpLeft;
+var helpTop;
 
 //绑定事件监听器
 showAbout.addEventListener("click",() => {
@@ -66,21 +68,23 @@ closeAbout.addEventListener("click",() => {
 aboutToolbar.addEventListener("mousedown",(e) => {
     isAboutDragging = true;
     aboutLeft = e.pageX - Number(aboutWindow.style.left.split("px")[0]);
+    aboutTop = e.pageY - Number(aboutWindow.style.top.split("px")[0]);
 });
 aboutToolbar.addEventListener("mousemove",(e) => {
     if (isAboutDragging) {
         aboutWindow.style.left = e.pageX - aboutLeft;
-        aboutWindow.style.top = e.pageY - 20;
+        aboutWindow.style.top = e.pageY - aboutTop;
     }
 });
 aboutToolbar.addEventListener("touchstart",(e) => {
     isAboutDragging = true;
     aboutLeft = e.touches[0].pageX - Number(aboutWindow.style.left.split("px")[0]);
+    aboutTop = e.touches[0].pageY - Number(aboutWindow.style.top.split("px")[0]);
 });
 aboutToolbar.addEventListener("touchmove",(e) => {
     if (isAboutDragging) {
         aboutWindow.style.left = e.touches[0].pageX - aboutLeft;
-        aboutWindow.style.top = e.touches[0].pageY - 20;
+        aboutWindow.style.top = e.touches[0].pageY - aboutTop;
     }
 });
 
@@ -92,22 +96,24 @@ closeHelp.addEventListener("click",() => {
 });
 helpToolbar.addEventListener("mousedown",(e) => {
     isHelpDragging = true;
-    helpLeft = e.pageX - Number(aboutWindow.style.left.split("px")[0]);
+    helpLeft = e.pageX - Number(helpWindow.style.left.split("px")[0]);
+    helpTop = e.pageY - Number(helpWindow.style.top.split("px")[0]);
 });
 helpToolbar.addEventListener("mousemove",(e) => {
     if (isHelpDragging) {
-        helpWindow.style.left = e.pageX - 20;
-        helpWindow.style.top = e.pageY - 20;
+        helpWindow.style.left = e.pageX - helpLeft;
+        helpWindow.style.top = e.pageY - helpTop;
     }
 });
 helpToolbar.addEventListener("touchstart",(e) => {
     isHelpDragging = true;
     helpLeft = e.touches[0].pageX - Number(helpWindow.style.left.split("px")[0]);
+    helpTop = e.touches[0].pageY - Number(helpWindow.style.top.split("px")[0]);
 });
 helpToolbar.addEventListener("touchmove",(e) => {
     if (isHelpDragging) {
         helpWindow.style.left = e.touches[0].pageX - helpLeft;
-        helpWindow.style.top = e.touches[0].pageY - 20;
+        helpWindow.style.top = e.touches[0].pageY - helpTop;
     }
 });
 
