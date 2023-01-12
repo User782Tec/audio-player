@@ -27,6 +27,9 @@ var aboutWindow = document.getElementById("about");
 var showAbout = document.getElementById("showabout");
 var closeAbout = document.getElementById("closeabout");
 var aboutToolbar = document.getElementById("abouttoolbar");
+var windows = document.getElementsByClassName("window");
+var toolbars = document.getElementsByClassName("toolbar");
+var closeButtons = document.getElementsByClassName("close");
 
 const menu = document.getElementById("menu");
 
@@ -35,7 +38,9 @@ const gain = audioContext.createGain();
 
 var track = audioContext.createMediaElementSource(audioElement);
 
-var isDragging = false;
+var isAboutDragging = false;
+
+var thisWindow;
 
 //绑定事件监听器
 showAbout.addEventListener("click",function(){
@@ -44,30 +49,29 @@ showAbout.addEventListener("click",function(){
 closeAbout.addEventListener("click",function(){
     aboutWindow.style.display = "none";
 });
-
 aboutToolbar.addEventListener("mousedown",function(){
-    isDragging = true;
+    isAboutDragging = true;
 });
 aboutToolbar.addEventListener("mousemove",(e) => {
-    if (isDragging) {
+    if (isAboutDragging) {
         aboutWindow.style.left = e.pageX - 20;
         aboutWindow.style.top = e.pageY - 20;
     }
 });
 window.addEventListener("mouseup",function(){
-    isDragging = false;
+    isAboutDragging = false;
 });
 aboutToolbar.addEventListener("touchstart",function(){
-    isDragging = true;
+    isAboutDragging = true;
 });
 aboutToolbar.addEventListener("touchmove",(e) => {
-    if (isDragging) {
+    if (isAboutDragging) {
         aboutWindow.style.left = e.touches[0].pageX - 20;
         aboutWindow.style.top = e.touches[0].pageY - 20;
     }
 });
 window.addEventListener("touchend",function(){
-    isDragging = false;
+    isAboutDragging = false;
 });
 
 playButton.addEventListener("click",play);
