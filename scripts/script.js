@@ -4,8 +4,10 @@
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 const audioContext = new AudioContext();
 
+const main = document.getElementById("main");
+
 const exitFullscreen = document.exitFullscreen || document.mozCancelFullScreen || document.webkitExitFullscreen;
-const fullScreen = document.getElementById("main").requestFullscreen || document.getElementById("main").mozRequestFullScreen || document.getElementById("main").webkitRequestFullscreen;
+const fullScreen = main.requestFullscreen || main.mozRequestFullScreen || main.webkitRequestFullscreen;
 
 var playButton = document.getElementById("play");
 var togglePlay = document.getElementById("toggleplay");
@@ -35,6 +37,11 @@ var showHelp = document.getElementById("showhelp");
 var closeHelp = document.getElementById("closehelp");
 var helpToolbar = document.getElementById("helptoolbar");
 
+var styleSettingsWindow = document.getElementById("stylesettings");
+var showStyleSetting = document.getElementById("showstylesettings");
+var closeStyleSettings = document.getElementById("closestylesettings");
+var styleSettingsToolbar = document.getElementById("stylesettingstoolbar");
+
 const menu = document.getElementById("menu");
 
 const reader = new FileReader();
@@ -46,6 +53,7 @@ var track = audioContext.createMediaElementSource(audioElement);
 
 var isAboutDragging = false;
 var isHelpDragging = false;
+var isStyleSettingsDragging = false;
 
 var prevClick = {play: 0, fullscreen: 0, menu: 0, repeat: 0};
 
@@ -53,8 +61,27 @@ var aboutLeft;
 var aboutTop;
 var helpLeft;
 var helpTop;
+var styleSettingsLeft;
+var styleSettingsTop;
+
+var root = document.querySelector(":root");
+
+var backgroundColorPickers = document.getElementsByClassName("bgcolorpicker")
 
 //绑定事件监听器
+for (var i = 0;i < backgroundColorPickers.length;i++) {
+    backgroundColorPickers[i].addEventListener("click",function(){
+        for (var i = 0;i < backgroundColorPickers.length;i++) {
+            backgroundColorPickers[i].dataset.selected = 'false';
+            backgroundColorPickers[i].className = "bgcolorpicker";
+        }
+        this.dataset.selected = 'true';
+        this.className = "bgcolorpicker selected";
+        root.style.setProperty("--main-bgcolor",this.dataset.color)
+        //main.style.backgroundColor = this.dataset.color;
+    });
+}
+
 showAbout.addEventListener("click",() => {
     aboutWindow.style.display = "block";
 });
@@ -113,13 +140,44 @@ helpToolbar.addEventListener("touchmove",(e) => {
     }
 });
 
+showStyleSetting.addEventListener("click",() => {
+    styleSettingsWindow.style.display = "block"
+});
+closeStyleSettings.addEventListener("click",() => {
+    styleSettingsWindow.style.display = "none";
+});
+styleSettingsToolbar.addEventListener("mousedown",(e) => {
+    isStyleSettingsDragging = true;
+    styleSettingsLeft = e.pageX - Number(styleSettingsWindow.style.left.split("px")[0]);
+    styleSettingsTop = e.pageY - Number(styleSettingsWindow.style.top.split("px")[0]);
+});
+styleSettingsToolbar.addEventListener("mousemove",(e) => {
+    if (isStyleSettingsDragging) {
+        styleSettingsWindow.style.left = e.pageX - styleSettingsLeft;
+        styleSettingsWindow.style.top = e.pageY - styleSettingsTop;
+    }
+});
+styleSettingsToolbar.addEventListener("touchstart",(e) => {
+    isStyleSettingsDragging = true;
+    styleSettingsLeft = e.touches[0].pageX - Number(styleSettingsWindow.style.left.split("px")[0]);
+    styleSettingsTop = e.touches[0].pageY - Number(styleSettingsWindow.style.top.split("px")[0]);
+});
+styleSettingsToolbar.addEventListener("touchmove",(e) => {
+    if (isStyleSettingsDragging) {
+        styleSettingsWindow.style.left = e.touches[0].pageX - styleSettingsLeft;
+        styleSettingsWindow.style.top = e.touches[0].pageY - styleSettingsTop;
+    }
+});
+
 window.addEventListener("mouseup",() => {
     isAboutDragging = false;
     isHelpDragging = false;
+    isStyleSettingsDragging = false;
 });
 window.addEventListener("touchend",() => {
     isAboutDragging = false;
     isHelpDragging = false;
+    isStyleSettingsDragging = false;
 });
 
 playButton.addEventListener("click",play);
@@ -221,7 +279,7 @@ function fullscreen() {
     }
     else {
         if (fullScreen) {
-            fullScreen.call(document.getElementById("main"));
+            fullScreen.call(main);
         }
         else {
             alert("当前浏览器不支持全屏显示，请切换浏览器再打开");
