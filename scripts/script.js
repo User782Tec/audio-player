@@ -49,7 +49,7 @@ const maximizeWindows = document.getElementsByClassName("maximum");
 const menu = document.getElementById("menu");
 
 // FileReader
-const reader = new FileReader();      
+const reader = new FileReader();
 
 // Date
 const date = new Date();
@@ -89,8 +89,6 @@ const linearGradientAddColor = document.getElementById("addcolor");
 
 // 是否启用窗口拖拽
 var useDragging = true;
-// 记录当前正在拖动的窗口
-var draggingWindow;
 
 // 是否启用强制窗口最大化
 var alwaysFullscreen = false;
@@ -162,35 +160,6 @@ for (const elt of backgroundColorPickers) {
 
 setPickerColor();
 
-// 绑定显示窗口按钮点击事件
-for (const elt of showWindows) {
-    elt.addEventListener("click", showWindow);
-}
-
-// 绑定关闭窗口按钮点击事件
-for (const elt of closeWindows) {
-    elt.addEventListener("click", closeWindow);
-}
-
-// 将正在被拖动的窗口置于最上面显示
-for (const elt of windows) {
-    elt.addEventListener("touchstart", showFirst);
-    elt.addEventListener("mousedown", showFirst);
-}
-
-// 绑定最大化窗口按钮点击事件
-for (const elt of maximizeWindows) {
-    elt.addEventListener("click", windowFullscreen);
-}
-
-// 拖拽窗口事件绑定
-for (const elt of toolbars) {
-    elt.addEventListener("touchstart", startDragging);
-    window.addEventListener("touchmove", dragging);
-    elt.addEventListener("mousedown", startDragging);
-    window.addEventListener("mousemove", dragging);
-}
-
 // 绑定背景类型选择元素选择事件
 for (const elt of backgroundType) {
     elt.addEventListener("mousedown", chooseBackground);
@@ -198,15 +167,11 @@ for (const elt of backgroundType) {
 
 // 绑定线性渐变色方向下拉列表选项选择事件
 for (const elt of linearGradientOptions) {
-    elt.addEventListener("mousedown",selectLinearGradientDirection);
+    elt.addEventListener("mousedown", selectLinearGradientDirection);
 }
 
 // 绑定自定义背景色选择器数值变动时的设置颜色时间
 backgroundColorSelector.addEventListener("change", selectorColor);
-
-// 绑定结束拖动窗口时事件
-window.addEventListener("touchend", finishDragging);
-window.addEventListener("mouseup", finishDragging);
 
 // 绑定播放按钮元素点击后播放音频的事件
 playButton.addEventListener("click", play);
@@ -218,7 +183,7 @@ audioElement.addEventListener("ended", () => {
     playButton.dataset.playing = "false";
     playIcon.className = "fa fa-play";
     // 重置进度条
-    restartProgress()
+    //restartProgress()
 });
 
 /*reader.addEventListener("loadend", () => {
@@ -235,8 +200,6 @@ fileElement.addEventListener("change", () => {
     audioElement.pause();
     playButton.dataset.playing = "false";
     playIcon.className = "fa fa-play"
-    // fileElement = document.getElemedcntById("files");
-    // audioElement = document.getElementById("audio");
     console.log("开始解析");
     // 解析为Blob
     var audioUrl = URL.createObjectURL(fileElement.files[0]);
@@ -246,8 +209,6 @@ fileElement.addEventListener("change", () => {
     // 连接节点
     track.connect(audioContext.destination);
     track.connect(gain).connect(audioContext.destination);
-    // 添加进度条
-    addProgress();
 });
 
 // 绑定双击操作菜单元素双击后打开/关闭菜单的事件
@@ -258,8 +219,8 @@ ctrlMenu.addEventListener("click", showmenu);
 ctrlFullscreen.addEventListener("click", fullscreen);
 toggleFullscreen.addEventListener("mousedown", dblclick(fullscreen, "fullscreen"));
 
-replay.addEventListener("click", restartProgress);
-toggleReplay.addEventListener("mousedown", dblclick(restartProgress, "replay"));
+//replay.addEventListener("click", restartProgress);
+//toggleReplay.addEventListener("mousedown", dblclick(restartProgress, "replay"));
 
 getStylesButton.addEventListener("click", () => {
     styleEditor.value = getStyles();
@@ -272,10 +233,10 @@ commitButton.addEventListener("click", () => {
 linearGradientAddColor.addEventListener("click", addColor);
 
 // 绑定音频播放进度条的开始与暂停事件
-progressBar.addEventListener("touchstart", stopProgress);
-progressBar.addEventListener("touchend", startProgress);
-progressBar.addEventListener("mousedown", stopProgress);
-progressBar.addEventListener("mouseup", startProgress);
+// progressBar.addEventListener("touchstart", stopProgress);
+// progressBar.addEventListener("touchend", startProgress);
+// progressBar.addEventListener("mousedown", stopProgress);
+// progressBar.addEventListener("mouseup", startProgress);
 
 // 绑定下载样式按钮点击的事件
 downloadStylesButton.addEventListener("click", downloadStyles);
@@ -307,7 +268,6 @@ function setLinearGradientColor() {
     setLinearGradient();
     // 清除冲突样式
     clearProperty("--main-bgcolor");
-    // main.style.backgroundColor = this.dataset.color;
 }
 
 // 显示或隐藏菜单
@@ -365,109 +325,207 @@ function play() {
     }
 }
 
-// 将正在拖动的窗口置于最上面显示
-function showFirst() {
-    var thisWindow = this;
-    window.setTimeout(() => {
-        // var node = aboutWindow.cloneNode(true);
-        var lastChild = windowContainer.lastElementChild;
-        if (lastChild != thisWindow) {
-            windowContainer.removeChild(thisWindow);
-            windowContainer.appendChild(thisWindow);
+// 窗口状态管理
+class Window {
+    // 初始化
+    constructor(showWindows, closeWindows, maximizeWindows) {
+        this.showWindows = showWindows;
+        this.closeWindows = closeWindows;
+        this.maximizeWindows = maximizeWindows;
+        this.alwaysFullscreen = false;
+    }
+    // 绑定事件监听器
+    addEvent(type) {
+        for (const elt of this.showWindows) {
+            elt.addEventListener(type, this.showWindow);
         }
-    }, 2);
-}
-
-// 窗口的最大化方法
-function windowFullscreen() {
-    if (!alwaysFullscreen) {
-        enableFullScreenMode();
-    }
-    else {
-        disableFullScreenMode();
-    }
-}
-
-// 打开/关闭窗口
-function showWindow() {
-    document.getElementById(this.dataset.window).style.display = "block";
-    showFirst.call(document.getElementById(this.dataset.window));
-}
-
-function closeWindow() {
-    document.getElementById(this.dataset.window).style.display = "none";
-    disableFullScreenMode();
-}
-
-// 拖动相关功能
-function startDragging(e) {
-    draggingWindow = document.getElementById(this.dataset.window);
-    root.dataset.dragging = "true";
-    if (e.type == "touchstart") {
-        draggingWindow.dataset.left = e.touches[0].pageX - document.getElementById(this.dataset.window).style.left.split("px")[0];
-        draggingWindow.dataset.top = e.touches[0].pageY - document.getElementById(this.dataset.window).style.top.split("px")[0];
-    }
-    else if (e.type == "mousedown") {
-        draggingWindow.dataset.left = e.pageX - document.getElementById(this.dataset.window).style.left.split("px")[0];
-        draggingWindow.dataset.top = e.pageY - document.getElementById(this.dataset.window).style.top.split("px")[0];
-    }
-    // if (useDragging) {
-    //     for (const elt of toolbars) {
-    //         elt.style.cursor = "grabbing";
-    //     }
-    //     root.style.cursor = "grabbing";
-    // }
-}
-function dragging(e) {
-    if (root.dataset.dragging === "true" && useDragging) {
-        if (e.type == "touchmove") {
-            draggingWindow.style.left = `${e.touches[0].pageX - draggingWindow.dataset.left}px`;
-            draggingWindow.style.top = `${e.touches[0].pageY - draggingWindow.dataset.top}px`;
+        for (const elt of this.closeWindows) {
+            elt.addEventListener(type, this.closeWindow);
+            elt.addEventListener(type, this.disableFullScreenMode.bind(this));
         }
-        else if (e.type == "mousemove") {
-            draggingWindow.style.left = `${e.pageX - draggingWindow.dataset.left}px`;
-            draggingWindow.style.top = `${e.pageY - draggingWindow.dataset.top}px`;
+        for (const elt of this.maximizeWindows) {
+            elt.addEventListener(type, this.windowFullscreen.bind(this));
+        }
+    }
+    // 打开窗口
+    showWindow() {
+        document.getElementById(this.dataset.window).style.display = "block";
+    }
+    // 关闭窗口
+    closeWindow() {
+        document.getElementById(this.dataset.window).style.display = "none";
+    }
+    // 检测窗口最大化状态并反转状态
+    windowFullscreen() {
+        if (!this.alwaysFullscreen) {
+            this.enableFullScreenMode();
+        }
+        else {
+            this.disableFullScreenMode();
+        }
+    }
+    // 禁用窗口最大化
+    disableFullScreenMode() {
+        this.alwaysFullscreen = false;
+        for (const elt of this.maximizeWindows) {
+            elt.lastElementChild.className = "fa fa-window-maximize";
+        }
+    }
+    // 启用窗口最大化
+    enableFullScreenMode() {
+        this.alwaysFullscreen = true;
+        for (const elt of this.maximizeWindows) {
+            elt.lastElementChild.className = "fa fa-window-restore";
         }
     }
 }
-function finishDragging() {
-    // for (const elt of toolbars) {
-    //     elt.style.cursor = "grab";
-    // }
-    root.dataset.dragging = "false";
-    // root.style.cursor = "default";
+
+const windowDisplay = new Window(showWindows, closeWindows, maximizeWindows);
+windowDisplay.addEvent("mousedown");
+
+// 拖动窗口
+class Drag extends Window {
+    // 初始化
+    constructor(toolbars, container) {
+        super(showWindows);
+        this.toolbars = toolbars;
+        this.windowContainer = container;
+        this.useDragging = true;
+        Drag.useDragging = true;
+    }
+    // 绑定事件监听器
+    addEvent() {
+        for (const elt of this.toolbars) {
+            elt.addEventListener("touchstart", this.startDragging.bind(this, elt));
+            elt.addEventListener("mousedown", this.startDragging.bind(this, elt));
+            window.addEventListener("touchmove", this.dragging.bind(this));
+            window.addEventListener("mousemove", this.dragging.bind(this));
+        }
+        for (const elt of this.showWindows) {
+            elt.addEventListener("mousedown", this.focusWindow.bind(this, elt));
+        }
+        window.addEventListener("mouseup", this.finishDragging.bind(this));
+        window.addEventListener("touchend", this.finishDragging.bind(this));
+    }
+    // 开始拖动
+    startDragging(elt,e) {
+        this.draggingWindow = document.getElementById(elt.dataset.window);
+        this.isDragging = true;
+        this.focusWindow.call(this, null);
+        // 检测事件类型以获取相应X,Y坐标
+        if (e.type == "touchstart") {
+            // 计算鼠标坐标与窗口坐标的差值
+            this.draggingWindow.dataset.deltaLeft = e.touches[0].pageX - this.draggingWindow.style.left.split("px")[0];
+            this.draggingWindow.dataset.deltaTop = e.touches[0].pageY - this.draggingWindow.style.top.split("px")[0];
+        }
+        else if (e.type == "mousedown") {
+            // 计算鼠标坐标与窗口坐标的差值
+            this.draggingWindow.dataset.deltaLeft = e.pageX - this.draggingWindow.style.left.split("px")[0];
+            this.draggingWindow.dataset.deltaTop = e.pageY - this.draggingWindow.style.top.split("px")[0];
+        }
+        // if (useDragging) {
+        //     for (const elt of toolbars) {
+        //         elt.style.cursor = "grabbing";
+        //     }
+        //     root.style.cursor = "grabbing";
+        // }
+    }
+    // 正在拖动
+    dragging(e) {
+        // 检测是否正在拖动或已启用拖动功能
+        if (this.isDragging === true && this.useDragging === true && Drag.useDragging == true) {
+            // 检测事件类型以设置相应X,Y坐标
+            if (e.type == "touchmove") {
+                // 设置X,Y坐标
+                this.draggingWindow.style.left = `${e.touches[0].pageX - this.draggingWindow.dataset.deltaLeft}px`;
+                this.draggingWindow.style.top = `${e.touches[0].pageY - this.draggingWindow.dataset.deltaTop}px`;
+            }
+            else if (e.type == "mousemove") {
+                // 设置X,Y坐标
+                this.draggingWindow.style.left = `${e.pageX - this.draggingWindow.dataset.deltaLeft}px`;
+                this.draggingWindow.style.top = `${e.pageY - this.draggingWindow.dataset.deltaTop}px`;
+            }
+        }
+    }
+    // 结束拖动
+    finishDragging() {
+        // for (const elt of toolbars) {
+        //     elt.style.cursor = "grab";
+        // }
+        this.isDragging = false;
+        // root.style.cursor = "default";
+    }
+    // 将焦点聚集在正在拖动的窗口
+    focusWindow(elt) {
+        // 检测是否存在正在拖动的窗口
+        if (elt != null) {
+            this.draggingWindow = document.getElementById(elt.dataset.window);
+        }
+        // 延迟执行
+        window.setTimeout(() => {
+            // 获取最后一个子元素
+            const lastChild = this.windowContainer.lastElementChild;
+            // 检测并进行替换
+            if (lastChild != this.draggingWindow) {
+                this.windowContainer.removeChild(this.draggingWindow);
+                this.windowContainer.appendChild(this.draggingWindow);
+            }
+        }, 2);
+    }
 }
 
-// 音频进度条相关功能
-function addProgress() {
-    progressContainer.className = "show";
-    progressing = window.setInterval(syncProgress, 20);
-}
-function stopProgress() {
-    window.clearInterval(progressing);
-    audioElement.pause();
-    progressBar.disabled = false;
-}
-function startProgress() {
-    audioElement.currentTime = progressBar.value / 10000;
-    if (playButton.dataset.playing === "true") {
-        audioElement.play();
+// 实例化
+const drag = new Drag(toolbars, windowContainer);
+drag.addEvent();
+
+// 音频播放进度条
+class Progress {
+    constructor(progress, container, audio, playButton) {
+        this.container = container;
+        this.progress = progress;
+        this.audio = audio;
+        this.playButton = playButton;
+        this.progressing = null;
     }
-    progressing = window.setInterval(syncProgress, 20);
-    progressBar.disabled = "disabled";
+    addEvent() {
+        this.progress.addEventListener("touchstart", this.stopProgress.bind(this));
+        this.progress.addEventListener("touchend", this.startProgress.bind(this));
+        this.progress.addEventListener("mousedown", this.stopProgress.bind(this));
+        this.progress.addEventListener("mouseup", this.startProgress.bind(this));
+    }
+    addProgress() {
+        this.container.className = "show";
+        this.progressing = window.setInterval(this.syncProgress, 20);
+    }
+    stopProgress() {
+        window.clearInterval(this.progressing);
+        this.audio.pause();
+    }
+    startProgress() {
+        this.audio.currentTime = this.progress.value / 10000;
+        if (this.playButton.dataset.playing === "true") {
+            this.audio.play();
+        }
+        this.progressing = window.setInterval(this.syncProgress, 20);
+    }
+    syncProgress() {
+        this.progress.value = this.audio.currentTime * 10000;
+        this.progress.max = this.audio.duration * 10000;
+    }
+    deleteProgress() {
+        clearInterval(this.progressing);
+        this.progress.value = 0;
+        this.container.className = "hide";
+    }
+    restartProgress() {
+        this.progress.value = 0;
+        this.audio.currentTime = 0;
+    }
 }
-function syncProgress() {
-    progressBar.value = audioElement.currentTime * 10000;
-    progressBar.max = audioElement.duration * 10000;
-}
-function deleteProgress() {
-    clearInterval(progressing);
-    progressContainer.className = "hide";
-}
-function restartProgress() {
-    progressBar.value = 0;
-    audioElement.currentTime = 0;
-}
+
+const progress = new Progress(progressBar, progressContainer, audioElement, playButton);
+progress.addEvent();
+fileElement.addEventListener("change", progress.addProgress.bind(progress));
 
 // 获取样式
 function getStyles() {
@@ -475,7 +533,7 @@ function getStyles() {
     var result = "{\n";
     for (const i of styles) {
         if (i.match("--")) {
-            result += `    "${i.replace("--","")}": "${styles.getPropertyValue(i)}",\n`;
+            result += `    "${i.replace("--", "")}": "${styles.getPropertyValue(i)}",\n`;
         }
     }
     if (result == "{\n") {
@@ -617,7 +675,7 @@ function setProperty(property_name, value) {
 
 function selectLinearGradientDirection() {
     const selected = this;
-    setSelection(selected,linearGradientOptions,"option-selected","option linear-gradient-option");
+    setSelection(selected, linearGradientOptions, "option-selected", "option linear-gradient-option");
     linearGradientFrom.innerText = selected.dataset.from;
     linearGradientTo.innerText = selected.dataset.to;
     LinearGradientDirection = this.dataset.value;
@@ -625,7 +683,7 @@ function selectLinearGradientDirection() {
 }
 
 // 设置选择
-function setSelection(selected,elements,selected_className,unselected_className) {
+function setSelection(selected, elements, selected_className, unselected_className) {
     for (const elt of elements) {
         elt.className = unselected_className;
     }
@@ -641,7 +699,7 @@ function addColor() {
     delete_element.appendChild(delete_icon);
     delete_element.innerHTML += " 删除颜色";
     element.appendChild(delete_element);
-    delete_element.addEventListener("click", function(){
+    delete_element.addEventListener("click", function () {
         linearGradientColors.removeChild(this.parentElement);
         setLinearGradient();
     })
@@ -654,7 +712,7 @@ function addColor() {
             colorpicker = generateElement("div", "", "colorpicker lineargradientpicker selected", value, "color");
         }
         selector_element.appendChild(colorpicker);
-        colorpicker.addEventListener("click", setLinearGradientColor);
+        colorpicker.onclick = setLinearGradientColor;
     }
     const colorselector = generateElement("label", "", "lineargradientpicker colorpicker colorselector", "black", "color");
     const color = document.createElement("input");
@@ -683,7 +741,7 @@ function setLinearGradient() {
 }
 
 // 生成元素
-function generateElement(type, inner, className, data=null, dataset=null, textType="innerText") {
+function generateElement(type, inner, className, data = null, dataset = null, textType = "innerText") {
     const element = document.createElement(type);
     element[textType] = inner;
     element.className = className;
@@ -763,7 +821,7 @@ async function generateStyleBox(file, meta) {
     element.appendChild(element_description);
     colorTheme.appendChild(element);
     // 点击后设置样式
-    element.addEventListener("click",function(){
+    element.addEventListener("click", function () {
         root.setAttribute("style", this.dataset.style);
     });
 }
@@ -777,21 +835,6 @@ async function generateStyleImage(file, meta, element_image, box) {
     box.insertBefore(element_image, box.firstElementChild);
     window.setTimeout(() => { refreshStyles.className = "button"; }, 300);
 }
-
-// 禁用或启用窗口最大化
-function disableFullScreenMode() {
-    alwaysFullscreen = false;
-    for (const elt of maximizeWindows) {
-        elt.lastElementChild.className = "fa fa-window-maximize";
-    }
-}
-function enableFullScreenMode() {
-    alwaysFullscreen = true;
-    for (const elt of maximizeWindows) {
-        elt.lastElementChild.className = "fa fa-window-restore";
-    }
-}
-
 
 // 为颜色选择器添加颜色
 function setPickerColor() {
@@ -808,14 +851,14 @@ window.setInterval(() => {
     else {
         fullscreenIcon.className = "fa fa-expand";
     }
-    if (window.innerWidth < 400 || alwaysFullscreen || window.innerHeight < 500) {
-        useDragging = false;
+    if (window.innerWidth < 400 || windowDisplay.alwaysFullscreen || window.innerHeight < 500) {
+        drag.useDragging = false;
         for (const elt of windows) {
             elt.className = "window fullscreen";
         }
     }
-    else if (!alwaysFullscreen) {
-        useDragging = true;
+    else if (!windowDisplay.alwaysFullscreen) {
+        drag.useDragging = true;
         for (const elt of windows) {
             elt.className = "window";
         }
