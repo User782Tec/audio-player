@@ -61,7 +61,7 @@ const gain = audioContext.createGain();
 const track = audioContext.createMediaElementSource(audioElement);
 
 // 记录第一次点击，用于双击判断
-const prevClick = { play: 0, fullscreen: 0, menu: 0, replay: 0 };
+const prevClick = { "play": 0, "fullscreen": 0, "menu": 0, "replay": 0 };
 
 // 根元素(非主元素)
 const root = document.querySelector(":root");
@@ -172,11 +172,10 @@ for (const elt of linearGradientOptions) {
 
 // 绑定自定义背景色选择器数值变动时的设置颜色时间
 backgroundColorSelector.addEventListener("change", selectorColor);
-
 // 绑定播放按钮元素点击后播放音频的事件
 playButton.addEventListener("click", play);
 // 绑定双击操作播放元素双击后播放音频的事件
-togglePlay.addEventListener("mousedown", dblclick(play, "play"));
+//togglePlay.addEventListener("mousedown", dblclick(play, "play"));
 
 // 绑定音频播放结束后的事件
 audioElement.addEventListener("ended", () => {
@@ -302,19 +301,19 @@ function fullscreen() {
     }
 }
 
-// 播放音频功能
+/*// 播放音频功能
 function play() {
     try {
         // playButton = document.getElementById("play");
         if (audioContext.state === "suspended") {
             audioContext.resume();
         }
-        if (playButton.dataset.playing === "false") {
+        if (audioElement.paused === true) {
             audioElement.play();
             playButton.dataset.playing = "true";
             playIcon.className = "fa fa-pause";
         }
-        else if (playButton.dataset.playing === "true") {
+        else if (audioElement === false) {
             audioElement.pause();
             playButton.dataset.playing = "false";
             playIcon.className = "fa fa-play";
@@ -323,7 +322,40 @@ function play() {
     catch (err) {
         console.error("操作执行失败,请重试");
     }
+}*/
+
+class AudioController {
+    constructor(audioElement, playButton, audioContext) {
+        this.audioElement = audioElement;
+        this.playButton = playButton;
+        this.audioContext = audioContext;
+    }
+    addEvent() {
+        this.audioElement.addEventListener("pause", () => {
+            this.playButton.lastElementChild.className = "fa fa-play";
+        });
+        this.audioElement.addEventListener("play", () => {
+            this.playButton.lastElementChild.className = "fa fa-pause";
+        });
+        this.playButton.addEventListener("click", () => {
+            this.play();
+        })
+    }
+    play() {
+        if (this.audioContext.state === "suspended") {
+            this.audioContext.resume();
+        }
+        if (this.audioElement.paused === true) {
+            this.audioElement.play();
+        }
+        else if (this.audioElement.paused === false) {
+            this.audioElement.pause();
+        }
+    }
 }
+const audio = new AudioController(audioElement, playButton, audioContext);
+audio.addEvent();
+togglePlay.addEventListener("mousedown", dblclick(audio.play.bind(audio), "play"));
 
 // 窗口状态管理
 class Window {
@@ -479,13 +511,14 @@ const drag = new Drag(toolbars, windowContainer);
 drag.addEvent();
 
 // 音频播放进度条
-class Progress {
+class Progress extends AudioController {
     constructor(progress, container, audio, playButton) {
+        super(audio);
         this.container = container;
         this.progress = progress;
-        this.audio = audio;
         this.playButton = playButton;
         this.progressing = null;
+        this.audioPaused = true;
     }
     addEvent() {
         this.progress.addEventListener("touchstart", this.stopProgress.bind(this));
@@ -495,22 +528,24 @@ class Progress {
     }
     addProgress() {
         this.container.className = "show";
-        this.progressing = window.setInterval(this.syncProgress, 20);
+        this.progressing = window.setInterval(this.syncProgress.bind(this), 20);
     }
     stopProgress() {
+        this.audioPaused = this.audioElement.paused;
         window.clearInterval(this.progressing);
-        this.audio.pause();
+        this.audioElement.pause();
     }
     startProgress() {
-        this.audio.currentTime = this.progress.value / 10000;
-        if (this.playButton.dataset.playing === "true") {
-            this.audio.play();
+        this.audioElement.currentTime = this.progress.value / 10000;
+        if (this.audioPaused === false) {
+            this.audioElement.play();
         }
-        this.progressing = window.setInterval(this.syncProgress, 20);
+        console.log(this)
+        this.progressing = window.setInterval(this.syncProgress.bind(this), 20);
     }
     syncProgress() {
-        this.progress.value = this.audio.currentTime * 10000;
-        this.progress.max = this.audio.duration * 10000;
+        this.progress.value = this.audioElement.currentTime * 10000;
+        this.progress.max = this.audioElement.duration * 10000;
     }
     deleteProgress() {
         clearInterval(this.progressing);
@@ -519,7 +554,7 @@ class Progress {
     }
     restartProgress() {
         this.progress.value = 0;
-        this.audio.currentTime = 0;
+        this.audioElement.currentTime = 0;
     }
 }
 

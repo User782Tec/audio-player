@@ -81,6 +81,7 @@ Cloudflare上构建的Pages：<https://audio-player.pages.dev/>
 * 修改了颜色深浅判断的方法。
 * 继续更改了响应式设计。
 * 重写了自定义样式的格式与获取、提交更改的方法。
+* 将`scripts/script.js`重命名为`scripts/main.js`。
 
 #### 优化
 

@@ -229,6 +229,7 @@ body {
     width: 55px;
     height: 55px;
     display: inline-block;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .left-top {
