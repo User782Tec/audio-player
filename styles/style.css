@@ -39,6 +39,8 @@ textarea {
 
 * {
     user-select: none;
+    margin: 0px;
+    padding: 0px;
 }
 
 .select {
@@ -47,9 +49,10 @@ textarea {
     border-radius: 0px;
     color: black;
     outline: none;
+    -webkit-tap-highlight-color: transparent;
 }
 
-.select:hover .select-content{
+.select:focus .select-content{
     display: block;
 }
 
@@ -109,7 +112,7 @@ textarea:focus {
     vertical-align: baseline !important;
 }
 
-html {
+html.root {
     overflow: hidden;
     touch-action: none;
 }

@@ -30,12 +30,12 @@ GitHub上构建的Pages：<https://user782tec.github.io/audio-player/>
 
 Cloudflare上构建的Pages：<https://audio-player.pages.dev/>
 
-~~ 不用下载，点击就玩 ~~
+~~不用下载，点击就玩 ~~
 
 ### 浏览器兼容性(不完整)
 
-* FireFox与Safari(几乎完全兼容)
-* Chrome与Opera(略有一些问题)
+* Chrome与Firefox(几乎完全兼容)
+* Safari与Opera(略有一些问题)
 * Internet Explorer(几乎完全不支持)
 
 ### 主要功能
@@ -45,6 +45,8 @@ Cloudflare上构建的Pages：<https://audio-player.pages.dev/>
 ## 更新日志
 
 ### 0.4.2 - beta
+
+0.4.2版本主要完善了颜色主题商店，重构了部分JavaScript代码，优化了部分功能，添加一些实验性特性，更改了部分内容并修复了一些问题。
 
 #### 新内容
 
@@ -82,11 +84,16 @@ Cloudflare上构建的Pages：<https://audio-player.pages.dev/>
 * 继续更改了响应式设计。
 * 重写了自定义样式的格式与获取、提交更改的方法。
 * 将`scripts/script.js`重命名为`scripts/main.js`。
+* 将修改样式的部分JavaScript代码提取至`scripts/styles.js`中。
+* 将部分JavaScript代码提取至`scripts/base.js`中。
 
 #### 优化
 
 * 针对鼠标优化了窗口的拖动方法。
 * 重构部分JavaScript代码。
+* 优化了窗口焦点控制。
+* 优化下拉菜单。
+* 优化自定义颜色选择器的颜色选择事件监听。
 
 #### 修复
 
@@ -96,7 +103,7 @@ Cloudflare上构建的Pages：<https://audio-player.pages.dev/>
 * 修复了背景色选择时无法覆盖背景图的问题。
 * 修复了在部分浏览器上无法获取高级样式的问题。
 * 修复了部分情况下窗口会超出页面的问题。
-* 音频播放时进度条不再被禁用以修复无法拖动进度条的问题。
+* 音频播放时进度条不再被禁用以修复部分情况下无法拖动进度条的问题。
 
 #### 已移除
 

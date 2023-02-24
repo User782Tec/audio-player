@@ -1,22 +1,15 @@
 'use strict';
 
-// 变量声明与赋值
+import Base from './base.js';
+import Styles from './styles.js';
 
-// AudioContext
-const AudioContext = window.AudioContext || window.webkitAudioContext; // 适配较老的浏览器
-const audioContext = new AudioContext();
-
-// 主元素(非根元素)
 const main = document.getElementById("main");
 
-// 全屏模式方法
 const exitFullscreen = document.exitFullscreen || document.mozCancelFullScreen || document.webkitExitFullscreen;
 const fullScreen = main.requestFullscreen || main.mozRequestFullScreen || main.webkitRequestFullscreen;
 
-// 播放相关元素
 const playButton = document.getElementById("play");
 const togglePlay = document.getElementById("toggleplay");
-const playIcon = document.getElementById("play-icon");
 
 // 音频文件上传相关元素
 const fileElement = document.getElementById("files");
@@ -48,20 +41,8 @@ const maximizeWindows = document.getElementsByClassName("maximum");
 // 菜单元素
 const menu = document.getElementById("menu");
 
-// FileReader
-const reader = new FileReader();
-
-// Date
-const date = new Date();
-
-// 音量增益节点
-const gain = audioContext.createGain();
-
 // 音频源节点
-const track = audioContext.createMediaElementSource(audioElement);
-
-// 记录第一次点击，用于双击判断
-const prevClick = { "play": 0, "fullscreen": 0, "menu": 0, "replay": 0 };
+//const track = audioContext.createMediaElementSource(audioElement);
 
 // 根元素(非主元素)
 const root = document.querySelector(":root");
@@ -87,12 +68,6 @@ let LinearGradientDirection = "top";
 // 为渐变色添加颜色的按钮元素
 const linearGradientAddColor = document.getElementById("addcolor");
 
-// 是否启用窗口拖拽
-var useDragging = true;
-
-// 是否启用强制窗口最大化
-var alwaysFullscreen = false;
-
 // 获取样式配置按钮元素
 const getStylesButton = document.getElementById("getstyles");
 // 高级样式编辑元素
@@ -109,8 +84,6 @@ const windowContainer = document.getElementById("windows");
 const progressContainer = document.getElementById("progress-container");
 // 音频播放进度条
 const progressBar = document.getElementById("progress");
-// 用于存储更新音频播放进度条定时事件的变量
-var progressing;
 
 // 选择背景类型的元素
 const backgroundType = document.getElementsByClassName("background-type");
@@ -142,8 +115,8 @@ var stylesRepoName;
 var stylesConfig;
 (async function () {
     // 获取配置文件
-    const config = await fetchJSON('configs/config.json');
-    const styleConfigData = await fetchJSON('configs/style_configs.json');
+    const config = await Base.Fetch.fetchJSON('configs/config.json');
+    const styleConfigData = await Base.Fetch.fetchJSON('configs/style_configs.json');
     // 配置默认域
     domain = config.domain;
     // 配置颜色主题仓库(目录)名称
@@ -171,16 +144,14 @@ for (const elt of linearGradientOptions) {
 }
 
 // 绑定自定义背景色选择器数值变动时的设置颜色时间
-backgroundColorSelector.addEventListener("change", selectorColor);
+backgroundColorSelector.addEventListener("input", selectorColor);
 // 绑定播放按钮元素点击后播放音频的事件
 playButton.addEventListener("click", play);
-// 绑定双击操作播放元素双击后播放音频的事件
-//togglePlay.addEventListener("mousedown", dblclick(play, "play"));
 
 // 绑定音频播放结束后的事件
 audioElement.addEventListener("ended", () => {
     playButton.dataset.playing = "false";
-    playIcon.className = "fa fa-play";
+    playButton.lastElementChild.className = "fa fa-play";
     // 重置进度条
     //restartProgress()
 });
@@ -198,7 +169,7 @@ fileElement.addEventListener("change", () => {
     // 暂停
     audioElement.pause();
     playButton.dataset.playing = "false";
-    playIcon.className = "fa fa-play"
+    playButton.lastElementChild.className = "fa fa-play"
     console.log("开始解析");
     // 解析为Blob
     var audioUrl = URL.createObjectURL(fileElement.files[0]);
@@ -206,39 +177,32 @@ fileElement.addEventListener("change", () => {
     // 设置音源
     audioElement.src = audioUrl;
     // 连接节点
-    track.connect(audioContext.destination);
-    track.connect(gain).connect(audioContext.destination);
+    // track.connect(audioContext.destination);
+    // track.connect(gain).connect(audioContext.destination);
 });
 
 // 绑定双击操作菜单元素双击后打开/关闭菜单的事件
-toggleMenu.addEventListener("mousedown", dblclick(showmenu, "menu"));
+toggleMenu.addEventListener("mousedown", Base.dblclick(showmenu));
 // 绑定关闭菜单按钮元素点击后关闭菜单的事件
 ctrlMenu.addEventListener("click", showmenu);
 
 ctrlFullscreen.addEventListener("click", fullscreen);
-toggleFullscreen.addEventListener("mousedown", dblclick(fullscreen, "fullscreen"));
-
-//replay.addEventListener("click", restartProgress);
-//toggleReplay.addEventListener("mousedown", dblclick(restartProgress, "replay"));
+toggleFullscreen.addEventListener("mousedown", Base.dblclick(fullscreen));
 
 getStylesButton.addEventListener("click", () => {
-    styleEditor.value = getStyles();
+    styleEditor.value = Styles.getStyles(stylesConfig);
 });
 
 commitButton.addEventListener("click", () => {
-    parseStyles(styleEditor.value);
+    Styles.parseStyles(styleEditor.value, stylesConfig);
 });
 
 linearGradientAddColor.addEventListener("click", addColor);
 
-// 绑定音频播放进度条的开始与暂停事件
-// progressBar.addEventListener("touchstart", stopProgress);
-// progressBar.addEventListener("touchend", startProgress);
-// progressBar.addEventListener("mousedown", stopProgress);
-// progressBar.addEventListener("mouseup", startProgress);
-
 // 绑定下载样式按钮点击的事件
-downloadStylesButton.addEventListener("click", downloadStyles);
+downloadStylesButton.addEventListener("click", () => {
+    Styles.downloadStyles(stylesConfig);
+});
 // 绑定刷新颜色主题按钮点击的事件
 refreshStyles.addEventListener("click", getStylesStore);
 
@@ -253,7 +217,7 @@ function setBackgroundColor() {
     // 保存数值
     staticColor.dataset.color = this.dataset.color;
     // 清除冲突样式
-    clearProperty("--main-bgimg");
+    Styles.setProperty("--main-bgimg", "none");
     // main.style.backgroundColor = this.dataset.color;
 }
 
@@ -266,7 +230,7 @@ function setLinearGradientColor() {
     // 设置样式
     setLinearGradient();
     // 清除冲突样式
-    clearProperty("--main-bgcolor");
+    Styles.setProperty("--main-bgcolor", "none");
 }
 
 // 显示或隐藏菜单
@@ -301,36 +265,12 @@ function fullscreen() {
     }
 }
 
-/*// 播放音频功能
-function play() {
-    try {
-        // playButton = document.getElementById("play");
-        if (audioContext.state === "suspended") {
-            audioContext.resume();
-        }
-        if (audioElement.paused === true) {
-            audioElement.play();
-            playButton.dataset.playing = "true";
-            playIcon.className = "fa fa-pause";
-        }
-        else if (audioElement === false) {
-            audioElement.pause();
-            playButton.dataset.playing = "false";
-            playIcon.className = "fa fa-play";
-        }
-    }
-    catch (err) {
-        console.error("操作执行失败,请重试");
-    }
-}*/
-
 class AudioController {
-    constructor(audioElement, playButton, audioContext) {
+    constructor(audioElement, playButton) {
         this.audioElement = audioElement;
         this.playButton = playButton;
-        this.audioContext = audioContext;
     }
-    addEvent() {
+    register() {
         this.audioElement.addEventListener("pause", () => {
             this.playButton.lastElementChild.className = "fa fa-play";
         });
@@ -339,12 +279,9 @@ class AudioController {
         });
         this.playButton.addEventListener("click", () => {
             this.play();
-        })
+        });
     }
     play() {
-        if (this.audioContext.state === "suspended") {
-            this.audioContext.resume();
-        }
         if (this.audioElement.paused === true) {
             this.audioElement.play();
         }
@@ -353,23 +290,28 @@ class AudioController {
         }
     }
 }
-const audio = new AudioController(audioElement, playButton, audioContext);
-audio.addEvent();
-togglePlay.addEventListener("mousedown", dblclick(audio.play.bind(audio), "play"));
+const audio = new AudioController(audioElement, playButton);
+audio.register();
+togglePlay.addEventListener("mousedown", Base.dblclick(audio.play.bind(audio)));
 
 // 窗口状态管理
 class Window {
     // 初始化
-    constructor(showWindows, closeWindows, maximizeWindows) {
+    constructor(showWindows, closeWindows, maximizeWindows, windows) {
         this.showWindows = showWindows;
         this.closeWindows = closeWindows;
         this.maximizeWindows = maximizeWindows;
+        this.windows = windows;
         this.alwaysFullscreen = false;
+        this.windowCount = 0;
+        for (const elt of this.windows) {
+            this.windowCount++;
+        }
     }
     // 绑定事件监听器
-    addEvent(type) {
+    register(type) {
         for (const elt of this.showWindows) {
-            elt.addEventListener(type, this.showWindow);
+            elt.addEventListener(type, this.showWindow.bind(this, elt));
         }
         for (const elt of this.closeWindows) {
             elt.addEventListener(type, this.closeWindow);
@@ -378,10 +320,14 @@ class Window {
         for (const elt of this.maximizeWindows) {
             elt.addEventListener(type, this.windowFullscreen.bind(this));
         }
+        for (const elt of this.windows) {
+            elt.addEventListener(type, this.focusWindow.bind(this, elt));
+        }
     }
     // 打开窗口
-    showWindow() {
-        document.getElementById(this.dataset.window).style.display = "block";
+    showWindow(elt) {
+        document.getElementById(elt.dataset.window).style.display = "block";
+        this.focusWindow(document.getElementById(elt.dataset.window));
     }
     // 关闭窗口
     closeWindow() {
@@ -410,31 +356,36 @@ class Window {
             elt.lastElementChild.className = "fa fa-window-restore";
         }
     }
+    focusWindow(elt) {
+        for (const element of this.windows) {
+            if (element.style.zIndex >= elt.style.zIndex) {
+                element.style.zIndex--;
+            }
+        }
+        elt.style.zIndex = this.windowCount;
+    }
 }
 
-const windowDisplay = new Window(showWindows, closeWindows, maximizeWindows);
-windowDisplay.addEvent("mousedown");
+const windowDisplay = new Window(showWindows, closeWindows, maximizeWindows, windows);
+windowDisplay.register("mousedown");
 
 // 拖动窗口
-class Drag extends Window {
+class Drag {
     // 初始化
-    constructor(toolbars, container) {
-        super(showWindows);
+    constructor(toolbars, container, showWindows) {
         this.toolbars = toolbars;
         this.windowContainer = container;
+        this.showWindows = showWindows;
         this.useDragging = true;
         Drag.useDragging = true;
     }
     // 绑定事件监听器
-    addEvent() {
+    register() {
         for (const elt of this.toolbars) {
             elt.addEventListener("touchstart", this.startDragging.bind(this, elt));
             elt.addEventListener("mousedown", this.startDragging.bind(this, elt));
             window.addEventListener("touchmove", this.dragging.bind(this));
             window.addEventListener("mousemove", this.dragging.bind(this));
-        }
-        for (const elt of this.showWindows) {
-            elt.addEventListener("mousedown", this.focusWindow.bind(this, elt));
         }
         window.addEventListener("mouseup", this.finishDragging.bind(this));
         window.addEventListener("touchend", this.finishDragging.bind(this));
@@ -443,7 +394,6 @@ class Drag extends Window {
     startDragging(elt,e) {
         this.draggingWindow = document.getElementById(elt.dataset.window);
         this.isDragging = true;
-        this.focusWindow.call(this, null);
         // 检测事件类型以获取相应X,Y坐标
         if (e.type == "touchstart") {
             // 计算鼠标坐标与窗口坐标的差值
@@ -487,28 +437,10 @@ class Drag extends Window {
         this.isDragging = false;
         // root.style.cursor = "default";
     }
-    // 将焦点聚集在正在拖动的窗口
-    focusWindow(elt) {
-        // 检测是否存在正在拖动的窗口
-        if (elt != null) {
-            this.draggingWindow = document.getElementById(elt.dataset.window);
-        }
-        // 延迟执行
-        window.setTimeout(() => {
-            // 获取最后一个子元素
-            const lastChild = this.windowContainer.lastElementChild;
-            // 检测并进行替换
-            if (lastChild != this.draggingWindow) {
-                this.windowContainer.removeChild(this.draggingWindow);
-                this.windowContainer.appendChild(this.draggingWindow);
-            }
-        }, 2);
-    }
 }
 
-// 实例化
-const drag = new Drag(toolbars, windowContainer);
-drag.addEvent();
+const drag = new Drag(toolbars, windowContainer, showWindows);
+drag.register();
 
 // 音频播放进度条
 class Progress extends AudioController {
@@ -520,7 +452,7 @@ class Progress extends AudioController {
         this.progressing = null;
         this.audioPaused = true;
     }
-    addEvent() {
+    register() {
         this.progress.addEventListener("touchstart", this.stopProgress.bind(this));
         this.progress.addEventListener("touchend", this.startProgress.bind(this));
         this.progress.addEventListener("mousedown", this.stopProgress.bind(this));
@@ -559,105 +491,25 @@ class Progress extends AudioController {
 }
 
 const progress = new Progress(progressBar, progressContainer, audioElement, playButton);
-progress.addEvent();
+progress.register();
 fileElement.addEventListener("change", progress.addProgress.bind(progress));
 
-// 获取样式
-function getStyles() {
-    var styles = window.getComputedStyle(root, null);
-    var result = "{\n";
-    for (const i of styles) {
-        if (i.match("--")) {
-            result += `    "${i.replace("--", "")}": "${styles.getPropertyValue(i)}",\n`;
-        }
-    }
-    if (result == "{\n") {
-        for (const keyValue of Object.entries(stylesConfig)) {
-            var value = window.getComputedStyle(document.querySelector(keyValue[1][0])).getPropertyValue(keyValue[1][1]);
-            if (keyValue[1][2] && keyValue[1][3]) {
-                if (keyValue[1][2] == "color") {
-                    result += `    "${keyValue[0]}": "${value.match(/(rgb\(..?.?, ..?.?, ..?.?\))|(rgba\(..?.?, ..?.?, ..?.?, ..?.?\))/g)[keyValue[1][3]]}",\n`;
-                }
-            }
-            else {
-                result += `    "${keyValue[0]}": "${value}",\n`;
-            }
-        }
-    }
-    result += "}";
-    result = result.replace(",\n}", "\n}");
-    return result;
-}
+// 回放
+replay.addEventListener("click", () => {
+    progress.restartProgress.bind(progress);
+    audio.play.bind(audio);
+});
+toggleReplay.addEventListener("mousedown", Base.dblclick(() => {
+    progress.restartProgress.bind(progress);
+    audio.play.bind(audio);
+}));
 
-// 解析样式
-function parseStyles(style) {
-    // 解析样式
-    var text = JSON.parse(style);
-    var commitStyles = "";
-    // 防止用户提交非法样式
-    for (const [key, value] of Object.entries(text)) {
-        for (const data of Object.entries(stylesConfig)) {
-            if (key == data[0]) {
-                commitStyles += `--${key}: ${value};`;
-            }
-        }
-    }
-    root.setAttribute("style", commitStyles);
-}
-
-// 判断颜色深浅
-function colorDepth(hex) {
-    hex = hex.split("#")[1];
-    var r = parseInt(`${hex[0]}${hex[1]}`, 16);
-    var g = parseInt(`${hex[2]}${hex[3]}`, 16);
-    var b = parseInt(`${hex[4]}${hex[5]}`, 16);
-    if (r + g + b < 382) {
-        return true;
-    }
-    else {
-        return false;
-    }
-}
-
-// 下载样式
-function downloadStyles() {
-    var style = getStyles();
-    download(style, "text/plain", "styles.txt");
-}
-
-// 下载功能
-function download(text, type, file_name) {
-    var blob = new Blob([text], { "type": type });
-    var element = document.createElement("a");
-    element.href = URL.createObjectURL(blob);
-    element.style.display = "none";
-    element.download = file_name;
-    main.appendChild(element);
-    element.click();
-    main.removeChild(element);
-}
-
-// 双击事件判断处理方法
-function dblclick(fn, key) {
-    return function () {
-        if (prevClick[key] == 0) {
-            prevClick[key] = 1;
-            window.setTimeout(() => {
-                prevClick[key] = 0;
-            }, 300);
-        }
-        else {
-            prevClick[key] = 0;
-            fn();
-        }
-    }
-}
 
 // 颜色选择器选择颜色
 function selectorColor() {
     this.parentElement.dataset.color = this.value;
     this.parentElement.style.backgroundColor = this.value;
-    if (colorDepth(this.value)) {
+    if (Styles.colorDepth(this.value)) {
         this.parentElement.style.color = "#dddddd";
     }
     else {
@@ -671,7 +523,7 @@ function linearGradientSelectorColor() {
         this.parentElement.dataset.color = this.value;
         this.parentElement.parentElement.parentElement.dataset.color = this.value;
         this.parentElement.style.backgroundColor = this.value;
-        if (colorDepth(this.value)) {
+        if (Styles.colorDepth(this.value)) {
             this.parentElement.style.color = "#dddddd";
         }
         else {
@@ -690,23 +542,14 @@ function chooseBackground() {
     document.getElementById(this.dataset.open).className = "selector";
     document.getElementById(this.dataset.close).className = "selector disabled";
     if (this.dataset.open === "static-color") {
-        setProperty("--main-bgcolor", staticColor.dataset.color);
-        clearProperty("--main-bgimg");
+        Styles.setProperty("--main-bgcolor", staticColor.dataset.color);
+        Styles.setProperty("--main-bgimg", "none");
     }
     else if (this.dataset.open === "linear-gradient") {
-        setProperty("--main-bgcolor", "white");
+        Styles.setProperty("--main-bgcolor", "white");
         setLinearGradient();
     }
 }
-
-// 清除或设置某个根元素的样式属性
-function clearProperty(property_name) {
-    root.style.setProperty(property_name, "none");
-}
-function setProperty(property_name, value) {
-    root.style.setProperty(property_name, value);
-}
-
 
 function selectLinearGradientDirection() {
     const selected = this;
@@ -786,28 +629,6 @@ function generateElement(type, inner, className, data = null, dataset = null, te
     return element;
 }
 
-// 获取网页文本
-async function fetchText(url) {
-    const response = await fetch(url);
-    const text = await response.text();
-    return text;
-}
-
-// 获取网页JSON数据
-async function fetchJSON(url) {
-    const response = await fetch(url);
-    const json = await response.json();
-    return json;
-}
-
-// 获取网页文件并将其本地化
-async function fetchFile(url) {
-    const response = await fetch(url);
-    const blob = await response.blob();
-    const result = URL.createObjectURL(blob);
-    return result;
-}
-
 // 获取文件列表中的每个文件
 async function startGenerate(filelist) {
     for (const file of filelist) {
@@ -819,7 +640,7 @@ async function startGenerate(filelist) {
 
 // 获取样式元数据
 async function generate(file) {
-    const meta = await fetchJSON(`${domain}/${stylesRepoName}/${file}/meta.json`);
+    const meta = await Base.Fetch.fetchJSON(`${domain}/${stylesRepoName}/${file}/meta.json`);
     generateStyleBox(file, meta);
 }
 
@@ -831,7 +652,7 @@ async function getStylesStore() {
     }
     colorTheme.innerHTML = "";
     refreshStyles.className = "button disabled";
-    var filelist = await fetchText(`${domain}/${stylesRepoName}/list.txt`);
+    var filelist = await Base.Fetch.fetchText(`${domain}/${stylesRepoName}/list.txt`);
     filelist = filelist.split("\n");
     await startGenerate(filelist);
 }
@@ -844,7 +665,7 @@ async function generateStyleBox(file, meta) {
     // 异步获取图像
     generateStyleImage(file, meta, element_image, element);
     // 获取样式, 创建元素
-    const style = await fetchText(`${domain}/${stylesRepoName}/${file}/${meta.styles}`);
+    const style = await Base.Fetch.fetchText(`${domain}/${stylesRepoName}/${file}/${meta.styles}`);
     element.dataset.style = style;
     const element_details = generateElement("div", meta.description, "style-details");
     const element_title = generateElement("div", meta.name, "style-title");
@@ -864,7 +685,7 @@ async function generateStyleBox(file, meta) {
 // 获取样式介绍图片
 async function generateStyleImage(file, meta, element_image, box) {
     // 获取图像
-    const image = await fetchFile(`${domain}/${stylesRepoName}/${file}/${meta.image}`);
+    const image = await Base.Fetch.fetchFile(`${domain}/${stylesRepoName}/${file}/${meta.image}`);
     element_image.className = "style-image";
     element_image.style.backgroundImage = `url(${image})`;
     box.insertBefore(element_image, box.firstElementChild);

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html class="root">
 
 <head>
     <meta charset="utf-8">
@@ -49,7 +49,7 @@
         <!--窗口-->
         <div id="windows">
             <!--帮助窗口-->
-            <div class="window" id="help" style="top:5px;left:5px;">
+            <div class="window" id="help" style="top:5px;left:5px;z-index:0;">
                 <div class="toolbar" data-window="help">
                     <i class="fa fa-question"></i> 帮助
                     <div class="toolbarbuttons">
@@ -91,7 +91,7 @@
                 </div>
             </div>
             <!--关于窗口-->
-            <div class="window" id="about" style="top:5px;left:5px;">
+            <div class="window" id="about" style="top:5px;left:5px;z-index:1;">
                 <div class="toolbar" data-window="about">
                     <i class="fa fa-info"></i> 关于
                     <div class="toolbarbuttons">
@@ -105,13 +105,13 @@
                         作者: User782Tec<br />
                         仓库地址: <a href="https://github.com/User782Tec/audio-player"
                             target="_blank">User782Tec/audio-player</a><br />
-                        当前版本: 0.4.2beta11a2<br />
-                        最后更新日期: 2023.1.9
+                        当前版本: 0.4.2beta11<br />
+                        最后更新日期: 2023.2.24
                     </div>
                 </div>
             </div>
             <!--外观窗口-->
-            <div class="window" id="stylesettings" style="top:5px;left:5px;">
+            <div class="window" id="stylesettings" style="top:5px;left:5px;z-index:2;">
                 <div class="toolbar" data-window="stylesettings">
                     <i class="fa fa-desktop"></i> 外观与个性化
                     <div class="toolbarbuttons">
@@ -143,7 +143,7 @@
                     <div class="selector disabled" id="linear-gradient">
                         <div>
                             从 <span id="gradient-from">下</span> 至
-                            <div class="select" id="gradient-from-to">
+                            <div class="select" id="gradient-from-to" tabindex="-1">
                                 <div class="select-title"><span id="gradient-to">上</span><div class="select-arrow"><i class="fa fa-sort-down"></i></div></div>
                                 <div class="select-content">
                                     <div class="option linear-gradient-option option-selected" data-to="上" data-from="下" data-value="top">上</div>
@@ -172,7 +172,7 @@
                     </div>
                 </div>
             </div>
-            <div class="window" id="store" style="top:5px;left:5px">
+            <div class="window" id="store" style="top:5px;left:5px;z-index:3;">
                 <div class="toolbar" data-window="store">
                     <i class="fa fa-archive"></i> 商店
                     <div class="toolbarbuttons">
@@ -190,7 +190,7 @@
                     <div id="color-theme"></div>
                 </div>
             </div>
-            <div class="window" id="settings" style="top:5px;left:5px;">
+            <div class="window" id="settings" style="top:5px;left:5px;z-index:4;">
                 <div class="toolbar" data-window="settings">
                     <i class="fa fa-cog"></i> 设置中心
                     <div class="toolbarbuttons">
@@ -240,7 +240,7 @@
             </div>
         </div>
     </div>
-    <script src="scripts/main.js"></script>
+    <script src="scripts/main.js" type="module"></script>
 </body>
 
 </html>
