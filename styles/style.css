@@ -58,19 +58,20 @@ textarea {
 
 .select-title {
     font-size: 0.87em !important;
-    padding-left: 5px;
-    display: inline-block;
-    background-color: #f5f5f5;
+    display: flex;
+    background-color: rgba(0, 0, 0, 0.1);
+    padding: 3px 10px 3px 10px;
     width: 40px;
     border: 1px solid gray;
+    justify-content: space-between;
 }
 
-.select-arrow {
+/* .select-arrow {
     display: inline-block;
     position: absolute;
     right: 5px;
     bottom: 3px;
-}
+} */
 
 .select-content {
     width: 80px;
@@ -101,11 +102,21 @@ textarea:focus {
 .button {
     cursor: pointer;
     display: inline-block;
-    background-color: #f5f5f5;
-    padding: 1px 10px;
+    background-color: rgba(0, 0, 0, 0.1);
+    padding: 5px 10px;
     border: 1px #565656 solid;
-    font-size: 0.8em !important;
     margin-right: 10px;
+    border-radius: 5px;
+    transition: transform cubic-bezier(0.14, 1.02, 0.17, 0.03) 0.5s;
+    font-size: 0.8em;
+}
+
+.button:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.button:active {
+    transform: scale(0.97);
 }
 
 .button * {
@@ -322,12 +333,11 @@ body {
 
 .selector {
     margin-top: 5px;
-    font-size: 12px;
     margin-left: 10px;
 }
 
 .selector * {
-    vertical-align: top;
+    vertical-align: baseline;
 }
 
 /*.bgcolorpicker:hover {
@@ -399,19 +409,18 @@ body {
 }
 
 .regular {
-    font-size: 0.8em;
     padding: 5px 0px;
 }
 
 .large {
-    font-size: 16px;
+    font-size: 1.2em;
     font-weight: bold;
+    line-height: 1.75;
 }
 
 .subtitle {
     color: #222222;
     font-size: 14px;
-    line-height: 16px !important;
     display: block;
 }
 
@@ -426,9 +435,25 @@ ol {
 
 .tab {
     margin-bottom: 10px;
+    border-radius: 10px;
+    transition: background-color 0.5s, transform cubic-bezier(0.14, 1.02, 0.17, 0.03) 0.5s;
+    width: 100%;
+}
+
+.tab:hover {
+    background-color: rgba(255, 255, 255, 0.4);
+}
+
+.tab:active {
+    transform: scale(0.97);
+}
+
+.tab>* {
+    margin-left: 10px;
 }
 
 .style-box {
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
     cursor: pointer;
     transition: all 0.18s;
     display: inline-table;
@@ -437,6 +462,7 @@ ol {
     height: 223.6px;
     background-color: lightgray;
     border-radius: 8px;
+    transition: transform cubic-bezier(0.14, 1.02, 0.17, 0.03) 0.5s;
 }
 
 .style-image {
@@ -477,9 +503,11 @@ ol {
 }
 
 .style-box:hover {
-    box-shadow: 0px 5px 0px gray;
     background-color: #ebebeb;
-    transform: scale(1.04);
+}
+
+.style-box:active {
+    transform: scale(0.97);
 }
 
 .section {

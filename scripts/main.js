@@ -194,7 +194,7 @@ getStylesButton.addEventListener("click", () => {
 });
 
 commitButton.addEventListener("click", () => {
-    Styles.parseStyles(styleEditor.value, stylesConfig);
+    Styles.pushStyles(Styles.parseStyles(styleEditor.value, stylesConfig));
 });
 
 linearGradientAddColor.addEventListener("click", addColor);
@@ -309,25 +309,28 @@ class Window {
         }
     }
     // 绑定事件监听器
-    register(type) {
+    register() {
         for (const elt of this.showWindows) {
-            elt.addEventListener(type, this.showWindow.bind(this, elt));
+            elt.addEventListener("click", this.showWindow.bind(this, elt));
         }
         for (const elt of this.closeWindows) {
-            elt.addEventListener(type, this.closeWindow);
-            elt.addEventListener(type, this.disableFullScreenMode.bind(this));
+            elt.addEventListener("click", this.closeWindow);
+            elt.addEventListener("click", this.disableFullScreenMode.bind(this));
         }
         for (const elt of this.maximizeWindows) {
-            elt.addEventListener(type, this.windowFullscreen.bind(this));
+            elt.addEventListener("click", this.windowFullscreen.bind(this));
         }
         for (const elt of this.windows) {
-            elt.addEventListener(type, this.focusWindow.bind(this, elt));
+            elt.addEventListener("mousedown", this.focusWindow.bind(this, elt));
+            elt.addEventListener("touchstart", this.focusWindow.bind(this, elt));
         }
     }
     // 打开窗口
     showWindow(elt) {
         document.getElementById(elt.dataset.window).style.display = "block";
-        this.focusWindow(document.getElementById(elt.dataset.window));
+        window.setTimeout(() => {
+            this.focusWindow(document.getElementById(elt.dataset.window));
+        }, 2);
     }
     // 关闭窗口
     closeWindow() {
@@ -367,7 +370,7 @@ class Window {
 }
 
 const windowDisplay = new Window(showWindows, closeWindows, maximizeWindows, windows);
-windowDisplay.register("mousedown");
+windowDisplay.register();
 
 // 拖动窗口
 class Drag {
@@ -666,7 +669,7 @@ async function generateStyleBox(file, meta) {
     generateStyleImage(file, meta, element_image, element);
     // 获取样式, 创建元素
     const style = await Base.Fetch.fetchText(`${domain}/${stylesRepoName}/${file}/${meta.styles}`);
-    element.dataset.style = style;
+    element.dataset.style = Styles.parseStyles(style, stylesConfig);
     const element_details = generateElement("div", meta.description, "style-details");
     const element_title = generateElement("div", meta.name, "style-title");
     const element_authors = generateElement("div", `作者: ${meta.authors}`, "subtitle");

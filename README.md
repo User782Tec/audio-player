@@ -83,9 +83,11 @@ Cloudflare上构建的Pages：<https://audio-player.pages.dev/>
 * 修改了颜色深浅判断的方法。
 * 继续更改了响应式设计。
 * 重写了自定义样式的格式与获取、提交更改的方法。
+  * 同时改写了样式库中的样式格式。
 * 将`scripts/script.js`重命名为`scripts/main.js`。
 * 将修改样式的部分JavaScript代码提取至`scripts/styles.js`中。
 * 将部分JavaScript代码提取至`scripts/base.js`中。
+* 修改部分样式。
 
 #### 优化
 
@@ -200,7 +202,7 @@ Cloudflare上构建的Pages：<https://audio-player.pages.dev/>
 * 为窗口新增了响应式设计以适配小屏设备。
 * 为JavaScript脚本启用“严格模式”。
 
-### 修复
+#### 修复
 
 * 修复了触摸设备上“双击后页面放大”的问题。
 

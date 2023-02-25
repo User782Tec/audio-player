@@ -41,7 +41,7 @@ class Styles {
                 }
             }
         }
-        this.root.setAttribute("style", commitStyles);
+        return commitStyles;
     }
     static colorDepth(hex) {
         hex = hex.split("#")[1];
@@ -61,6 +61,9 @@ class Styles {
     }
     static setProperty(property_name, value) {
         this.root.style.setProperty(property_name, value);
+    }
+    static pushStyles(style) {
+        this.root.setAttribute("style", style);
     }
 }
 
